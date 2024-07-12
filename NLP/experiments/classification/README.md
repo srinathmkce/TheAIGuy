@@ -10,6 +10,7 @@ Only the articles tagged to english are considered for this experiment - https:/
 
 ## Experiment Results
 
-| Experiment   | Model        | Total Processed | Time Taken | Actual Cost(in dollars) | Estimated Cost(in dollars) | Estimated Time | Remarks            |
-|--------------|--------------|-----------------|------------|-------------|----------------|----------------|--------------------|
-| [Experiment-1](../classification/Experiment-1%20GPT3.5.ipynb) | [GPT 3.5 Turbo](https://platform.openai.com/docs/models/gpt-3-5-turbo) | 5000 articles   | 50 mins    | $5         | $3000            | 40 days      | Sequential execution - Naive approach and not effective for huge dataset   |
+| Experiment   | Model        | Total Processed | Time Taken | Actual Cost(in dollars) | Remarks            |
+|--------------|--------------|-----------------|------------|-------------------------|--------------------|
+| [Experiment-1](../classification/Experiment-1%20GPT3.5.ipynb) | [GPT 3.5 Turbo](https://platform.openai.com/docs/models/gpt-3-5-turbo) | 1000 articles   | 14 mins    | $0.5                   | Sequential execution - Naive approach and not effective for huge dataset   |
+| [Experiment-2](../classification/Experiment-2%20langchain%20batching.ipynb) | [GPT 3.5 Turbo](https://platform.openai.com/docs/models/gpt-3-5-turbo) | 1000 articles   | 5 mins    | $0.5                     | Concurrent execution - Faster than Experiment-1   |
