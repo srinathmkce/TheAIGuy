@@ -1,0 +1,12 @@
+[project]
+name = "openai-invoice-extraction"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "datasets>=4.0.0",
+    "ipykernel>=6.29.5",
+    "langchain-openai>=0.3.27",
+    "mlflow>=3.1.1",
+]
