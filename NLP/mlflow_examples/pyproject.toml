@@ -1,0 +1,14 @@
+[project]
+name = "mlflow-examples"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "datasets>=4.3.0",
+    "gepa>=0.0.17",
+    "langchain-google-genai>=3.0.0",
+    "litellm>=1.78.7",
+    "mlflow>=3.5.1",
+    "pandas>=2.3.3",
+]
