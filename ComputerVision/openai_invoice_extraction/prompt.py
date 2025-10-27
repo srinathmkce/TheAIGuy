@@ -35,7 +35,7 @@ def register_prompt(prompt_name):
     Example 3:
     {{example3}}"""
 
-    if "" in prompt_name:
+    if "few-shot" in prompt_name:
         system_prompt = system_prompt + few_shot_prompt
 
     print(system_prompt)

@@ -1,5 +1,5 @@
 ## Introduction
-This example demonstrates how to leverage MLflow for experimenting OpenAI’s GPT-5-mini and GPT-5-nano models on the invoice extraction task, using the CORD-v2 dataset.
+This example demonstrates how to leverage MLflow for experimenting with Google's Gemini 2.0 Flash model on the invoice extraction task, using the CORD-v2 dataset. The code has been updated to use LangChain for seamless integration with Google's Generative AI.
 
 The goal is not only to compare model performance, but also to showcase how MLflow can streamline the entire workflow with:
 
@@ -13,7 +13,7 @@ The goal is not only to compare model performance, but also to showcase how MLfl
 
 We use the CORD-v2 dataset available on Hugging Face: [CORD-v2 on HuggingFace](https://huggingface.co/datasets/naver-clova-ix/cord-v2).
 
-For this experiment, we focus exclusively on the test split, which contains 100 invoice samples. This subset provides a standardized experiments for evaluating invoice field extraction using GPT-5-mini and GPT-5-nano, while keeping the experiment lightweight and reproducible.
+For this experiment, we focus exclusively on the test split, which contains 100 invoice samples. This subset provides a standardized experiments for evaluating invoice field extraction using Gemini 2.0 Flash, while keeping the experiment lightweight and reproducible.
 
 The dataset is under [Creative Commons Attribution 4.0 International
 License][cc-by].
@@ -34,17 +34,17 @@ Run the following command to start the MLflow server
 mlflow server --host 127.0.0.1 --port 8080
 ```
 
-#### Setting OpenAI environment
+#### Setting Google AI environment
 
-Create a new file `.env` and paste your OPENI key
+Create a new file `.env` and paste your Google AI API key
 
 ```
-OPENAI_API_KEY=<OPENAI-API-KEY>
+GOOGLE_API_KEY=<GOOGLE-AI-API-KEY>
 ```
 
 ### Running the experiment
 
-Open the [cord_v2_gpt5_baseline_mlflow.ipynb](./cord_v2_gpt5_baseline_mlflow.ipynb) notebook.
+Open the [cord_v2_gemini_baseline_mlflow.ipynb](./cord_v2_gemini_baseline_mlflow.ipynb) notebook.
 
 Install the necessary dependencies mentioned in the notebook.
 
@@ -52,7 +52,7 @@ The provided Jupyter notebook walks through the full benchmarking workflow step 
 
 
 1. **Set the configrations**
-   - Set the MLflow, OpenAI and prompt configurations here.
+   - Set the MLflow, Google AI and prompt configurations here.
    ![Setting up MLflow](./screenshots/mlflow.png)
 
 2. **Register prompt and model**
@@ -71,7 +71,7 @@ The provided Jupyter notebook walks through the full benchmarking workflow step 
    - Calculate the accuracy of the individual invoice
    ![Calculate Accuracy](./screenshots/invoice-metrics.png)
 
-6. **Tracing OpenAI API calls**  
+6. **Tracing Gemini API calls**  
    - Tracing individual invoice extraction parameters - request, response, metadata
    ![Trace analysis](./screenshots/trace-analysis.png)
 
@@ -92,4 +92,22 @@ Overall model metrics
 
 Best performing models
 ![Best performing models](./screenshots/best-models.png)
+
+### Key Changes Made
+
+This codebase has been updated to use Google's Gemini 2.0 Flash model via LangChain instead of OpenAI's GPT-5. Key changes include:
+
+- **Model Integration**: Replaced OpenAI client with `ChatGoogleGenerativeAI` from LangChain
+- **Message Format**: Updated to use LangChain's `HumanMessage` format for multimodal inputs
+- **Token Usage**: Adapted token usage tracking for Gemini's response format
+- **Cost Tracking**: Added Gemini pricing to the cost.json file
+- **Configuration**: Updated model name and experiment names to reflect Gemini usage
+
+### Testing
+
+A test script `test_gemini_integration.py` is provided to verify the Gemini integration works correctly. Run it to test:
+
+```bash
+python test_gemini_integration.py
+```
 

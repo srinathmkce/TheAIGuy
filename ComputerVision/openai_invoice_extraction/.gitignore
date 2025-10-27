@@ -1,0 +1,14 @@
+# Ignore MLflow run directories
+mlruns/
+**/mlruns/**
+
+# Ignore artifact directories produced by ML tools (including MLflow)
+artifacts/
+**/artifacts/**
+
+# Ignore local MLflow artifact stores sometimes named mlartifacts
+mlartifacts/
+**/mlartifacts/**
+
+# Ignore .env file
+.env

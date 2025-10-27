@@ -165,11 +165,26 @@ def retrieve_token_usage(trace_df):
     total_output_tokens = 0
     total_reasoning_tokens = 0
     for i in range(len(trace_df)):
-        token_dict = trace_df["response"][i]['usage']
-        input_tokens = token_dict.get("input_tokens", 0)
-        reasoning_tokens = token_dict.get("output_tokens_details", 0).get("reasoning_tokens", 0)
-        output_tokens = token_dict.get("output_tokens", 0)
-        total_input_tokens += input_tokens
-        total_output_tokens += output_tokens
-        total_reasoning_tokens += reasoning_tokens
+        # For Gemini responses, token usage might be in different format
+        try:
+            token_dict = trace_df["response"][i]['usage']
+            input_tokens = token_dict.get("input_tokens", 0)
+            output_tokens = token_dict.get("output_tokens", 0)
+            # Gemini doesn't have reasoning tokens like GPT-5
+            reasoning_tokens = 0
+            total_input_tokens += input_tokens
+            total_output_tokens += output_tokens
+            total_reasoning_tokens += reasoning_tokens
+        except (KeyError, TypeError):
+            # If token usage format is different, try alternative parsing
+            try:
+                # For LangChain responses, token usage might be in usage_metadata
+                usage_metadata = trace_df["response"][i].get('usage_metadata', {})
+                input_tokens = usage_metadata.get("input_tokens", 0)
+                output_tokens = usage_metadata.get("output_tokens", 0)
+                total_input_tokens += input_tokens
+                total_output_tokens += output_tokens
+            except (KeyError, TypeError):
+                # If no token usage available, continue with 0
+                continue
     return total_input_tokens, total_output_tokens, total_reasoning_tokens
