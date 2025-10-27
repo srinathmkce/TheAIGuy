@@ -6,7 +6,7 @@ from mlflow.models import set_model
 
 
 class LangchainModel(PythonModel):
-    
+
     def __init__(self):
         super().__init__()
 
@@ -26,14 +26,20 @@ class LangchainModel(PythonModel):
             rate_limiter=rate_limiter,
         )
 
-    def predict(self, model_input: dict) -> str:
-        prompt_template = mlflow.genai.load_prompt(
-            "news_classifier", version=1
-        ).template
-        prompt = prompt_template.format(article=model_input)
-        response = self.llm.invoke(prompt)
-        print(response)
-        return response.content
-
+    def predict(self, model_input: list[dict[str, str]]) -> list[str]:
+        responses = []
+        for data in model_input:
+            print("Received Input: ", data)
+            article = data.get("article")
+            prompt_uri = data.get("prompt_uri")
+            if not prompt_uri:
+                raise ValueError("prompt_uri is required")
+            if not article:
+                raise ValueError("article is required")
+            prompt_template = mlflow.genai.load_prompt(prompt_uri).template
+            prompt = prompt_template.format(article=article)
+            response = self.llm.invoke(prompt)
+            responses.append(response.content)
+        return responses
 
 set_model(LangchainModel())
