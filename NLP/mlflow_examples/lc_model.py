@@ -6,7 +6,6 @@ from mlflow.models import set_model
 
 
 class LangchainModel(PythonModel):
-    
     def __init__(self):
         super().__init__()
 
