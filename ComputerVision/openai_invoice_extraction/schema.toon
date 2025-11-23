@@ -1,0 +1,32 @@
+menu:
+  nm: name of the menu
+  num: identification number of menu
+  unitprice: unit price of menu
+  cnt: quantity of menu
+  discountprice: discounted price of menu
+  price: total price of menu
+  itemsubtotal: price of each menu after discount applied
+  vatyn: whether the price includes tax or not
+  etc: others
+  sub:
+    nm: name of submenu
+    unitprice: unit price of submenu
+    cnt: quantity of submenu
+    price: total price of submenu
+    etc: others
+sub_total:
+  price: subtotal price
+  discount_price: discounted price in total
+  service_price: service charge
+  othersvc_price: added charge other than service charge
+  tax_price: tax amount
+  etc: others
+total:
+  total_price: total price
+  etc: others
+  cashprice: amount of price paid in cash
+  changeprice: amount of change in cash
+  creditcardprice: amount of price paid in credit/debit card
+  emoneyprice: "amount of price paid in emoney, point"
+  menutype_cnt: total count of type of menu
+  menuqty_cnt: total count of quantity
