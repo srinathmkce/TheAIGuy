@@ -12,7 +12,7 @@ WORKDIR /app
 RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 
 # Install Kokoro and Web API dependencies
-RUN pip install --no-cache-dir kokoro>=0.19 soundfile fastapi uvicorn python-multipart
+RUN pip install --no-cache-dir kokoro>=0.19 soundfile fastapi uvicorn python-multipart gradio
 
 # Copy the API script
 COPY api.py .
