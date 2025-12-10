@@ -73,7 +73,7 @@ with gr.Blocks(title="Kokoro TTS (Local Docker)") as demo:
             )
             with gr.Row():
                 voice_dropdown = gr.Dropdown(
-                    choices=[
+                    choices=[   
                         "af_heart",
                         "af_alloy",
                         "af_aoede",
