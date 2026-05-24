@@ -1,0 +1,602 @@
+[
+  {
+    "label": "25% off\nSummer Hydration or Housewares",
+    "bbox": [
+      0.4087,
+      0.548,
+      0.5317,
+      0.1557
+    ],
+    "color": [
+      255,
+      0,
+      0,
+      80
+    ],
+    "outline": [
+      178,
+      0,
+      0
+    ]
+  },
+  {
+    "label": "25% off\nSignature Select Party Goods",
+    "bbox": [
+      0.4087,
+      0.1557,
+      0.5317,
+      0.2452
+    ],
+    "color": [
+      0,
+      255,
+      0,
+      80
+    ],
+    "outline": [
+      0,
+      178,
+      0
+    ]
+  },
+  {
+    "label": "16.99 ea\nSignature Select Camp Chair",
+    "bbox": [
+      0.4087,
+      0.2452,
+      0.5317,
+      0.3347
+    ],
+    "color": [
+      0,
+      0,
+      255,
+      80
+    ],
+    "outline": [
+      0,
+      0,
+      178
+    ]
+  },
+  {
+    "label": "25% off\nIGLOO Cooler",
+    "bbox": [
+      0.4087,
+      0.3347,
+      0.5317,
+      0.4278
+    ],
+    "color": [
+      255,
+      255,
+      0,
+      80
+    ],
+    "outline": [
+      178,
+      178,
+      0
+    ]
+  },
+  {
+    "label": "29.99 ea\nSignature Select Stack Chair",
+    "bbox": [
+      0.4087,
+      0.4278,
+      0.5317,
+      0.5186
+    ],
+    "color": [
+      255,
+      0,
+      255,
+      80
+    ],
+    "outline": [
+      178,
+      0,
+      178
+    ]
+  },
+  {
+    "label": "29.99 ea\nSignature Select Umbrella Base",
+    "bbox": [
+      0.4087,
+      0.5186,
+      0.5317,
+      0.608
+    ],
+    "color": [
+      0,
+      255,
+      255,
+      80
+    ],
+    "outline": [
+      0,
+      178,
+      178
+    ]
+  },
+  {
+    "label": "59.99 ea\nSignature Select 9ft Patio Umbrella",
+    "bbox": [
+      0.4087,
+      0.608,
+      0.5317,
+      0.6975
+    ],
+    "color": [
+      128,
+      0,
+      0,
+      80
+    ],
+    "outline": [
+      89,
+      0,
+      0
+    ]
+  },
+  {
+    "label": "249.99 ea\nSignature Select 5-Pc Patio Set",
+    "bbox": [
+      0.4087,
+      0.6975,
+      0.5317,
+      0.7766
+    ],
+    "color": [
+      0,
+      128,
+      0,
+      80
+    ],
+    "outline": [
+      0,
+      89,
+      0
+    ]
+  },
+  {
+    "label": "299.99 ea\nCharbroil Performance 4 Burner Gas Grill",
+    "bbox": [
+      0.4087,
+      0.7766,
+      0.5317,
+      0.8732
+    ],
+    "color": [
+      0,
+      0,
+      128,
+      80
+    ],
+    "outline": [
+      0,
+      0,
+      89
+    ]
+  },
+  {
+    "label": "449.99 ea\nBlackstone 28in Griddle with Hood",
+    "bbox": [
+      0.4087,
+      0.8732,
+      0.5317,
+      0.9639
+    ],
+    "color": [
+      128,
+      128,
+      0,
+      80
+    ],
+    "outline": [
+      89,
+      89,
+      0
+    ]
+  },
+  {
+    "label": "BUY 1 GET 1 50% off\nOne-A-Day, Aleve or Bayer Aspirin",
+    "bbox": [
+      0.0437,
+      0.1062,
+      0.1601,
+      0.1983
+    ],
+    "color": [
+      128,
+      0,
+      128,
+      80
+    ],
+    "outline": [
+      89,
+      0,
+      89
+    ]
+  },
+  {
+    "label": "$2.50 off\nDepend or Poise",
+    "bbox": [
+      0.0437,
+      0.1983,
+      0.1601,
+      0.2801
+    ],
+    "color": [
+      0,
+      128,
+      128,
+      80
+    ],
+    "outline": [
+      0,
+      89,
+      89
+    ]
+  },
+  {
+    "label": "9.99 ea\nCortizone-10",
+    "bbox": [
+      0.0437,
+      0.2801,
+      0.1601,
+      0.3646
+    ],
+    "color": [
+      255,
+      165,
+      0,
+      80
+    ],
+    "outline": [
+      178,
+      115,
+      0
+    ]
+  },
+  {
+    "label": "SPEND $15 SAVE $5\nDove Clinical Antiperspirant Or Dove Men Whole Body Spray",
+    "bbox": [
+      0.0437,
+      0.4794,
+      0.1345,
+      0.5756
+    ],
+    "color": [
+      255,
+      192,
+      203,
+      80
+    ],
+    "outline": [
+      178,
+      134,
+      142
+    ]
+  },
+  {
+    "label": "25% off\nSignature Select or Signature Home Cleaning Products",
+    "bbox": [
+      0.0437,
+      0.608,
+      0.2185,
+      0.6865
+    ],
+    "color": [
+      165,
+      42,
+      42,
+      80
+    ],
+    "outline": [
+      115,
+      29,
+      29
+    ]
+  },
+  {
+    "label": "2.99 ea\nSignature Select Food Storage",
+    "bbox": [
+      0.0437,
+      0.6865,
+      0.1322,
+      0.7766
+    ],
+    "color": [
+      0,
+      0,
+      0,
+      80
+    ],
+    "outline": [
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "label": "40% off\nAssorted Inflatables",
+    "bbox": [
+      0.0437,
+      0.7842,
+      0.3983,
+      0.9007
+    ],
+    "color": [
+      210,
+      105,
+      30,
+      80
+    ],
+    "outline": [
+      147,
+      73,
+      21
+    ]
+  },
+  {
+    "label": "4.99 ea\nGarnier Fructis Shampoo or Conditioner",
+    "bbox": [
+      0.1601,
+      0.1062,
+      0.2789,
+      0.1983
+    ],
+    "color": [
+      100,
+      149,
+      237,
+      80
+    ],
+    "outline": [
+      70,
+      104,
+      165
+    ]
+  },
+  {
+    "label": "$1 off\nKotex Bio Liners",
+    "bbox": [
+      0.1601,
+      0.1983,
+      0.2789,
+      0.2801
+    ],
+    "color": [
+      46,
+      139,
+      87,
+      80
+    ],
+    "outline": [
+      32,
+      97,
+      60
+    ]
+  },
+  {
+    "label": "16.99 ea\nMucinex Maximum Strength Sinus Relief",
+    "bbox": [
+      0.1601,
+      0.2801,
+      0.2789,
+      0.3646
+    ],
+    "color": [
+      218,
+      112,
+      214,
+      80
+    ],
+    "outline": [
+      152,
+      78,
+      149
+    ]
+  },
+  {
+    "label": "12.99 ea\nOld Spice Alchemist Cologne Infused Deodorant",
+    "bbox": [
+      0.1345,
+      0.4794,
+      0.2185,
+      0.5756
+    ],
+    "color": [
+      255,
+      69,
+      0,
+      80
+    ],
+    "outline": [
+      178,
+      48,
+      0
+    ]
+  },
+  {
+    "label": "3.99 ea\nRubbermaid TakeAlongs Food Storage",
+    "bbox": [
+      0.1322,
+      0.6865,
+      0.2209,
+      0.7766
+    ],
+    "color": [
+      60,
+      179,
+      113,
+      80
+    ],
+    "outline": [
+      42,
+      125,
+      79
+    ]
+  },
+  {
+    "label": "7.99 ea\nPantene, Head & Shoulders and Herbal Essence",
+    "bbox": [
+      0.2789,
+      0.1062,
+      0.3983,
+      0.1983
+    ],
+    "color": [
+      123,
+      104,
+      238,
+      80
+    ],
+    "outline": [
+      86,
+      72,
+      166
+    ]
+  },
+  {
+    "label": "$1 off\nU By Kotex Click Tampons",
+    "bbox": [
+      0.2789,
+      0.1983,
+      0.3983,
+      0.2801
+    ],
+    "color": [
+      255,
+      20,
+      147,
+      80
+    ],
+    "outline": [
+      178,
+      14,
+      102
+    ]
+  },
+  {
+    "label": "14.99 ea\nMiralax",
+    "bbox": [
+      0.2789,
+      0.2801,
+      0.3983,
+      0.3646
+    ],
+    "color": [
+      240,
+      230,
+      140,
+      80
+    ],
+    "outline": [
+      168,
+      161,
+      98
+    ]
+  },
+  {
+    "label": "13.99 ea\nSecret Clinical Antiperspirant",
+    "bbox": [
+      0.2185,
+      0.4794,
+      0.3113,
+      0.5756
+    ],
+    "color": [
+      173,
+      216,
+      230,
+      80
+    ],
+    "outline": [
+      121,
+      151,
+      161
+    ]
+  },
+  {
+    "label": "BUY $2 SAVE $4\nNative Deodorant",
+    "bbox": [
+      0.3113,
+      0.4794,
+      0.3983,
+      0.5756
+    ],
+    "color": [
+      250,
+      128,
+      114,
+      80
+    ],
+    "outline": [
+      175,
+      89,
+      79
+    ]
+  },
+  {
+    "label": "9.99 ea\nSignature Select Disinfecting Wipes",
+    "bbox": [
+      0.2185,
+      0.608,
+      0.3983,
+      0.6865
+    ],
+    "color": [
+      144,
+      238,
+      144,
+      80
+    ],
+    "outline": [
+      100,
+      166,
+      100
+    ]
+  },
+  {
+    "label": "7.99\nOFF! Insect Repellent",
+    "bbox": [
+      0.2209,
+      0.6865,
+      0.3096,
+      0.7766
+    ],
+    "color": [
+      135,
+      206,
+      235,
+      80
+    ],
+    "outline": [
+      94,
+      144,
+      164
+    ]
+  },
+  {
+    "label": "12.99\nSTEM",
+    "bbox": [
+      0.3096,
+      0.6865,
+      0.3983,
+      0.7766
+    ],
+    "color": [
+      255,
+      215,
+      0,
+      80
+    ],
+    "outline": [
+      178,
+      150,
+      0
+    ]
+  }
+]

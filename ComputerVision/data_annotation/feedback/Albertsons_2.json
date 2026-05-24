@@ -1,0 +1,802 @@
+[
+  {
+    "label": "2.99\nea\nTillamook Cheese",
+    "bbox": [
+      0.6111,
+      0.0401,
+      0.7511,
+      0.1471
+    ],
+    "color": [
+      235,
+      64,
+      52,
+      80
+    ],
+    "outline": [
+      235,
+      64,
+      52
+    ]
+  },
+  {
+    "label": "2.99\nea\nRefreshe Purified Drinking Water or Soleil Sparkling Water",
+    "bbox": [
+      0.6111,
+      0.1554,
+      0.7511,
+      0.2604
+    ],
+    "color": [
+      235,
+      149,
+      52,
+      80
+    ],
+    "outline": [
+      235,
+      149,
+      52
+    ]
+  },
+  {
+    "label": "6.99\nea\nGatorade Sports Drinks",
+    "bbox": [
+      0.6111,
+      0.2697,
+      0.7511,
+      0.3797
+    ],
+    "color": [
+      235,
+      235,
+      52,
+      80
+    ],
+    "outline": [
+      235,
+      235,
+      52
+    ]
+  },
+  {
+    "label": "2.49\nlb\nSignature Select Fresh Boneless Skinless Chicken Thighs",
+    "bbox": [
+      0.6111,
+      0.395,
+      0.7511,
+      0.495
+    ],
+    "color": [
+      149,
+      235,
+      52,
+      80
+    ],
+    "outline": [
+      149,
+      235,
+      52
+    ]
+  },
+  {
+    "label": "5.99\nlb\nSignature Select 85% Lean 15% Fat Ground Beef",
+    "bbox": [
+      0.6111,
+      0.5053,
+      0.7511,
+      0.6053
+    ],
+    "color": [
+      64,
+      235,
+      52,
+      80
+    ],
+    "outline": [
+      64,
+      235,
+      52
+    ]
+  },
+  {
+    "label": "4.99\nlb\nLarge EZ Peel Raw or Cooked Shrimp",
+    "bbox": [
+      0.6111,
+      0.6166,
+      0.7511,
+      0.7266
+    ],
+    "color": [
+      52,
+      235,
+      149,
+      80
+    ],
+    "outline": [
+      52,
+      235,
+      149
+    ]
+  },
+  {
+    "label": "16.99\nea\nClass of Gold Bouquet",
+    "bbox": [
+      0.6151,
+      0.7719,
+      0.7481,
+      0.8529
+    ],
+    "color": [
+      52,
+      235,
+      235,
+      80
+    ],
+    "outline": [
+      52,
+      235,
+      235
+    ]
+  },
+  {
+    "label": "29.99\nea\nOrchid Lei",
+    "bbox": [
+      0.6151,
+      0.8603,
+      0.7481,
+      0.9503
+    ],
+    "color": [
+      52,
+      149,
+      235,
+      80
+    ],
+    "outline": [
+      52,
+      149,
+      235
+    ]
+  },
+  {
+    "label": "7.99\nRAO'S Pasta Sauce",
+    "bbox": [
+      0.055,
+      0.893,
+      0.171,
+      0.1873
+    ],
+    "color": [
+      52,
+      64,
+      235,
+      80
+    ],
+    "outline": [
+      52,
+      64,
+      235
+    ]
+  },
+  {
+    "label": "1.79\nSignature Select Croutons",
+    "bbox": [
+      0.186,
+      0.893,
+      0.306,
+      0.1873
+    ],
+    "color": [
+      149,
+      52,
+      235,
+      80
+    ],
+    "outline": [
+      149,
+      52,
+      235
+    ]
+  },
+  {
+    "label": "3.99\nFrozen Gummi Pops",
+    "bbox": [
+      0.322,
+      0.1003,
+      0.438,
+      0.1873
+    ],
+    "color": [
+      235,
+      52,
+      235,
+      80
+    ],
+    "outline": [
+      235,
+      52,
+      235
+    ]
+  },
+  {
+    "label": "2.79\nO-Organics Ketchup",
+    "bbox": [
+      0.453,
+      0.963,
+      0.57,
+      0.1873
+    ],
+    "color": [
+      235,
+      52,
+      149,
+      80
+    ],
+    "outline": [
+      235,
+      52,
+      149
+    ]
+  },
+  {
+    "label": "5.99\nSpindrift Sparkling Water",
+    "bbox": [
+      0.055,
+      0.1973,
+      0.171,
+      0.2943
+    ],
+    "color": [
+      235,
+      64,
+      52,
+      80
+    ],
+    "outline": [
+      235,
+      64,
+      52
+    ]
+  },
+  {
+    "label": "2.49\nNabisco Breakfast belVita",
+    "bbox": [
+      0.186,
+      0.1973,
+      0.306,
+      0.2943
+    ],
+    "color": [
+      235,
+      149,
+      52,
+      80
+    ],
+    "outline": [
+      235,
+      149,
+      52
+    ]
+  },
+  {
+    "label": "19.99\nMonster Energy Drink",
+    "bbox": [
+      0.322,
+      0.1973,
+      0.438,
+      0.2943
+    ],
+    "color": [
+      235,
+      235,
+      52,
+      80
+    ],
+    "outline": [
+      235,
+      235,
+      52
+    ]
+  },
+  {
+    "label": "3.49\nSimple Mills Cookies",
+    "bbox": [
+      0.453,
+      0.1973,
+      0.57,
+      0.2943
+    ],
+    "color": [
+      149,
+      235,
+      52,
+      80
+    ],
+    "outline": [
+      149,
+      235,
+      52
+    ]
+  },
+  {
+    "label": "2.99\nLucerne Coffee Creamer",
+    "bbox": [
+      0.055,
+      0.3013,
+      0.171,
+      0.3983
+    ],
+    "color": [
+      64,
+      235,
+      52,
+      80
+    ],
+    "outline": [
+      64,
+      235,
+      52
+    ]
+  },
+  {
+    "label": "3.49\nTropicana Orange Juice",
+    "bbox": [
+      0.186,
+      0.3013,
+      0.306,
+      0.3983
+    ],
+    "color": [
+      52,
+      235,
+      149,
+      80
+    ],
+    "outline": [
+      52,
+      235,
+      149
+    ]
+  },
+  {
+    "label": "4.99\nFreschetta, Home Run Inn",
+    "bbox": [
+      0.322,
+      0.3013,
+      0.438,
+      0.3983
+    ],
+    "color": [
+      52,
+      235,
+      235,
+      80
+    ],
+    "outline": [
+      52,
+      235,
+      235
+    ]
+  },
+  {
+    "label": "3.99\nBanquet Mega Bowls, Bertolli Appetizer",
+    "bbox": [
+      0.453,
+      0.3013,
+      0.57,
+      0.3983
+    ],
+    "color": [
+      52,
+      149,
+      235,
+      80
+    ],
+    "outline": [
+      52,
+      149,
+      235
+    ]
+  },
+  {
+    "label": "3.99\nPhiladelphia Cream Cheese Spread",
+    "bbox": [
+      0.055,
+      0.4083,
+      0.171,
+      0.5053
+    ],
+    "color": [
+      52,
+      64,
+      235,
+      80
+    ],
+    "outline": [
+      52,
+      64,
+      235
+    ]
+  },
+  {
+    "label": "8.99\nFrito Lay Variety Sack Chips",
+    "bbox": [
+      0.186,
+      0.4083,
+      0.306,
+      0.5053
+    ],
+    "color": [
+      149,
+      52,
+      235,
+      80
+    ],
+    "outline": [
+      149,
+      52,
+      235
+    ]
+  },
+  {
+    "label": "4.99\nQuaker Giant Cereal",
+    "bbox": [
+      0.322,
+      0.4083,
+      0.438,
+      0.5053
+    ],
+    "color": [
+      235,
+      52,
+      235,
+      80
+    ],
+    "outline": [
+      235,
+      52,
+      235
+    ]
+  },
+  {
+    "label": "1.99\nBirds Eye Steamable Vegetables",
+    "bbox": [
+      0.453,
+      0.4083,
+      0.57,
+      0.5053
+    ],
+    "color": [
+      235,
+      52,
+      149,
+      80
+    ],
+    "outline": [
+      235,
+      52,
+      149
+    ]
+  },
+  {
+    "label": "1.49\nDuncan Hines Classic Cake Mix",
+    "bbox": [
+      0.055,
+      0.5153,
+      0.171,
+      0.6123
+    ],
+    "color": [
+      235,
+      64,
+      52,
+      80
+    ],
+    "outline": [
+      235,
+      64,
+      52
+    ]
+  },
+  {
+    "label": "1.99\nNissin Top Ramen Noodles",
+    "bbox": [
+      0.186,
+      0.5153,
+      0.306,
+      0.6123
+    ],
+    "color": [
+      235,
+      149,
+      52,
+      80
+    ],
+    "outline": [
+      235,
+      149,
+      52
+    ]
+  },
+  {
+    "label": "3.49\nCapri Sun",
+    "bbox": [
+      0.322,
+      0.5153,
+      0.438,
+      0.6123
+    ],
+    "color": [
+      235,
+      235,
+      52,
+      80
+    ],
+    "outline": [
+      235,
+      235,
+      52
+    ]
+  },
+  {
+    "label": "3.49\nMrs. Butterworth's Syrup",
+    "bbox": [
+      0.453,
+      0.5153,
+      0.57,
+      0.6123
+    ],
+    "color": [
+      149,
+      235,
+      52,
+      80
+    ],
+    "outline": [
+      149,
+      235,
+      52
+    ]
+  },
+  {
+    "label": "3.99\nHormel Black Label Bacon",
+    "bbox": [
+      0.055,
+      0.6223,
+      0.171,
+      0.7193
+    ],
+    "color": [
+      64,
+      235,
+      52,
+      80
+    ],
+    "outline": [
+      64,
+      235,
+      52
+    ]
+  },
+  {
+    "label": "6.99\nSuper Sub Sandwich",
+    "bbox": [
+      0.186,
+      0.6223,
+      0.306,
+      0.7193
+    ],
+    "color": [
+      52,
+      235,
+      149,
+      80
+    ],
+    "outline": [
+      52,
+      235,
+      149
+    ]
+  },
+  {
+    "label": "2.49\nPerfect Bar",
+    "bbox": [
+      0.322,
+      0.6223,
+      0.438,
+      0.7193
+    ],
+    "color": [
+      52,
+      235,
+      235,
+      80
+    ],
+    "outline": [
+      52,
+      235,
+      235
+    ]
+  },
+  {
+    "label": "2.99\nSara Lee Artesano Style Bread",
+    "bbox": [
+      0.453,
+      0.6223,
+      0.57,
+      0.7193
+    ],
+    "color": [
+      52,
+      149,
+      235,
+      80
+    ],
+    "outline": [
+      52,
+      149,
+      235
+    ]
+  },
+  {
+    "label": "2.99\nNerds Gummy Clusters",
+    "bbox": [
+      0.055,
+      0.7293,
+      0.171,
+      0.8263
+    ],
+    "color": [
+      52,
+      64,
+      235,
+      80
+    ],
+    "outline": [
+      52,
+      64,
+      235
+    ]
+  },
+  {
+    "label": "13.99\nCharmin Bath Tissue",
+    "bbox": [
+      0.186,
+      0.7293,
+      0.306,
+      0.8263
+    ],
+    "color": [
+      149,
+      52,
+      235,
+      80
+    ],
+    "outline": [
+      149,
+      52,
+      235
+    ]
+  },
+  {
+    "label": "16.99\nTide Liquid",
+    "bbox": [
+      0.322,
+      0.7293,
+      0.438,
+      0.8263
+    ],
+    "color": [
+      235,
+      52,
+      235,
+      80
+    ],
+    "outline": [
+      235,
+      52,
+      235
+    ]
+  },
+  {
+    "label": "5.99\nOlay Body Wash",
+    "bbox": [
+      0.453,
+      0.7293,
+      0.57,
+      0.8263
+    ],
+    "color": [
+      235,
+      52,
+      149,
+      80
+    ],
+    "outline": [
+      235,
+      52,
+      149
+    ]
+  },
+  {
+    "label": "1.49\nSignature Select Diced Chilies",
+    "bbox": [
+      0.053,
+      0.8601,
+      0.176,
+      0.9541
+    ],
+    "color": [
+      235,
+      64,
+      52,
+      80
+    ],
+    "outline": [
+      235,
+      64,
+      52
+    ]
+  },
+  {
+    "label": "1.69\nSignature Select Refried Beans",
+    "bbox": [
+      0.186,
+      0.8601,
+      0.309,
+      0.9541
+    ],
+    "color": [
+      235,
+      149,
+      52,
+      80
+    ],
+    "outline": [
+      235,
+      149,
+      52
+    ]
+  },
+  {
+    "label": "3.29\nSignature Select Salsa",
+    "bbox": [
+      0.316,
+      0.8601,
+      0.442,
+      0.9541
+    ],
+    "color": [
+      235,
+      235,
+      52,
+      80
+    ],
+    "outline": [
+      235,
+      235,
+      52
+    ]
+  },
+  {
+    "label": "2.99\nSignature Select Tortillas",
+    "bbox": [
+      0.453,
+      0.8601,
+      0.57,
+      0.9541
+    ],
+    "color": [
+      149,
+      235,
+      52,
+      80
+    ],
+    "outline": [
+      149,
+      235,
+      52
+    ]
+  }
+]

@@ -1,0 +1,302 @@
+[
+  {
+    "label": "BUY $25 SAVE $5\nwith U",
+    "bbox": [
+      0.1167,
+      0.0381,
+      0.6475,
+      0.1437
+    ],
+    "color": [
+      235,
+      101,
+      54,
+      80
+    ],
+    "outline": [
+      202,
+      61,
+      12
+    ]
+  },
+  {
+    "label": "3 for $5\nCore Hydration",
+    "bbox": [
+      0.1221,
+      0.1449,
+      0.2863,
+      0.3155
+    ],
+    "color": [
+      138,
+      201,
+      38,
+      80
+    ],
+    "outline": [
+      92,
+      142,
+      15
+    ]
+  },
+  {
+    "label": "2 for $4\nBai Antioxidant Infusion Beverage, Canada Dry Mixers or Core Hydration Water",
+    "bbox": [
+      0.297,
+      0.1449,
+      0.4612,
+      0.3155
+    ],
+    "color": [
+      25,
+      130,
+      196,
+      80
+    ],
+    "outline": [
+      14,
+      86,
+      131
+    ]
+  },
+  {
+    "label": "2 for $5\nGhost Energy Drink, La Colombe Latte, Hawaiian Punch or Electrolit",
+    "bbox": [
+      0.472,
+      0.1449,
+      0.6406,
+      0.3155
+    ],
+    "color": [
+      106,
+      76,
+      147,
+      80
+    ],
+    "outline": [
+      67,
+      45,
+      96
+    ]
+  },
+  {
+    "label": "2 for $6\nYoo-hoo, Evian Water or Hawaiian Punch",
+    "bbox": [
+      0.1221,
+      0.3204,
+      0.2863,
+      0.4909
+    ],
+    "color": [
+      255,
+      89,
+      94,
+      80
+    ],
+    "outline": [
+      229,
+      20,
+      27
+    ]
+  },
+  {
+    "label": "2 for $7\nPolar Seltzer or Mott's Apple Juice",
+    "bbox": [
+      0.297,
+      0.3204,
+      0.4612,
+      0.4909
+    ],
+    "color": [
+      255,
+      202,
+      58,
+      80
+    ],
+    "outline": [
+      218,
+      158,
+      0
+    ]
+  },
+  {
+    "label": "4.99 ea\nCore Hydration, Snapple Tea or Fruit Drink, Clamato Tomato Cocktail",
+    "bbox": [
+      0.472,
+      0.3204,
+      0.6406,
+      0.4909
+    ],
+    "color": [
+      138,
+      201,
+      38,
+      80
+    ],
+    "outline": [
+      92,
+      142,
+      15
+    ]
+  },
+  {
+    "label": "5.99 ea\nLa Colombe Draft Latte, 7-Up, Sunkist or A&W Soft Drinks or Bai Beverage",
+    "bbox": [
+      0.1221,
+      0.497,
+      0.2863,
+      0.6675
+    ],
+    "color": [
+      25,
+      130,
+      196,
+      80
+    ],
+    "outline": [
+      14,
+      86,
+      131
+    ]
+  },
+  {
+    "label": "5.99 ea\nGhost Energy Drink, 7-Up, Sunkist or A&W Soft Drinks",
+    "bbox": [
+      0.297,
+      0.497,
+      0.4612,
+      0.6675
+    ],
+    "color": [
+      106,
+      76,
+      147,
+      80
+    ],
+    "outline": [
+      67,
+      45,
+      96
+    ]
+  },
+  {
+    "label": "6.99 ea\nGreen Mountain Coffee, Swiss Miss, Donut Shop Iced K-Cup or Keurig Coffee Collective K-Cup or Electrolit",
+    "bbox": [
+      0.472,
+      0.497,
+      0.6406,
+      0.6675
+    ],
+    "color": [
+      255,
+      89,
+      94,
+      80
+    ],
+    "outline": [
+      229,
+      20,
+      27
+    ]
+  },
+  {
+    "label": "2.99 ea\nMaruchan Ramen",
+    "bbox": [
+      0.1167,
+      0.6809,
+      0.3792,
+      0.7684
+    ],
+    "color": [
+      255,
+      202,
+      58,
+      80
+    ],
+    "outline": [
+      218,
+      158,
+      0
+    ]
+  },
+  {
+    "label": "7.99 ea\nRed Vines Jar",
+    "bbox": [
+      0.3831,
+      0.6809,
+      0.6406,
+      0.7684
+    ],
+    "color": [
+      138,
+      201,
+      38,
+      80
+    ],
+    "outline": [
+      92,
+      142,
+      15
+    ]
+  },
+  {
+    "label": "99¢ ea\nLucerne Cream Cheese",
+    "bbox": [
+      0.1167,
+      0.7708,
+      0.3792,
+      0.8584
+    ],
+    "color": [
+      25,
+      130,
+      196,
+      80
+    ],
+    "outline": [
+      14,
+      86,
+      131
+    ]
+  },
+  {
+    "label": "2.99 ea\nKeebler Family Size! Sunshine Cheez-It or Club Crackers",
+    "bbox": [
+      0.3831,
+      0.7708,
+      0.6406,
+      0.8584
+    ],
+    "color": [
+      106,
+      76,
+      147,
+      80
+    ],
+    "outline": [
+      67,
+      45,
+      96
+    ]
+  },
+  {
+    "label": "$12 off\nCharmin Bath Tissue, Bounty Paper Towels, Tide or Gain Laundry or Cascade ACTIONPACS Dish Detergent",
+    "bbox": [
+      0.1167,
+      0.8608,
+      0.6406,
+      0.9484
+    ],
+    "color": [
+      255,
+      89,
+      94,
+      80
+    ],
+    "outline": [
+      229,
+      20,
+      27
+    ]
+  }
+]

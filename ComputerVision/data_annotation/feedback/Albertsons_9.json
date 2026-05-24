@@ -1,0 +1,482 @@
+[
+  {
+    "label": "6.99\nChicken Kabobs",
+    "bbox": [
+      0.035,
+      0.114,
+      0.231,
+      0.237
+    ],
+    "color": [
+      128,
+      0,
+      128,
+      80
+    ],
+    "outline": [
+      255,
+      255,
+      0
+    ]
+  },
+  {
+    "label": "24.99\nStone's Ground Beef Patties",
+    "bbox": [
+      0.236,
+      0.106,
+      0.435,
+      0.237
+    ],
+    "color": [
+      255,
+      0,
+      0,
+      80
+    ],
+    "outline": [
+      128,
+      0,
+      128
+    ]
+  },
+  {
+    "label": "9.99\nSignature Select Boneless Skinless Chicken Breasts",
+    "bbox": [
+      0.444,
+      0.102,
+      0.643,
+      0.234
+    ],
+    "color": [
+      0,
+      128,
+      128,
+      80
+    ],
+    "outline": [
+      255,
+      0,
+      0
+    ]
+  },
+  {
+    "label": "5.99\nAsparagus Spears",
+    "bbox": [
+      0.035,
+      0.234,
+      0.233,
+      0.375
+    ],
+    "color": [
+      128,
+      128,
+      0,
+      80
+    ],
+    "outline": [
+      0,
+      128,
+      128
+    ]
+  },
+  {
+    "label": "5.99\nGrilling Vegetables",
+    "bbox": [
+      0.237,
+      0.25,
+      0.431,
+      0.373
+    ],
+    "color": [
+      255,
+      165,
+      0,
+      80
+    ],
+    "outline": [
+      128,
+      128,
+      0
+    ]
+  },
+  {
+    "label": "5.99\nHamburger Fixings",
+    "bbox": [
+      0.441,
+      0.246,
+      0.64,
+      0.373
+    ],
+    "color": [
+      0,
+      255,
+      0,
+      80
+    ],
+    "outline": [
+      255,
+      165,
+      0
+    ]
+  },
+  {
+    "label": "4.99\nCheesecake",
+    "bbox": [
+      0.035,
+      0.378,
+      0.185,
+      0.468
+    ],
+    "color": [
+      0,
+      0,
+      255,
+      80
+    ],
+    "outline": [
+      0,
+      255,
+      0
+    ]
+  },
+  {
+    "label": "12.99\nCookie Platter",
+    "bbox": [
+      0.191,
+      0.377,
+      0.337,
+      0.467
+    ],
+    "color": [
+      255,
+      192,
+      203,
+      80
+    ],
+    "outline": [
+      0,
+      0,
+      255
+    ]
+  },
+  {
+    "label": "6.99\nSignature Select Deli Salad",
+    "bbox": [
+      0.342,
+      0.377,
+      0.486,
+      0.467
+    ],
+    "color": [
+      165,
+      42,
+      42,
+      80
+    ],
+    "outline": [
+      255,
+      192,
+      203
+    ]
+  },
+  {
+    "label": "2 for $7\nDeli Tortilla Chips",
+    "bbox": [
+      0.495,
+      0.374,
+      0.643,
+      0.468
+    ],
+    "color": [
+      0,
+      255,
+      255,
+      80
+    ],
+    "outline": [
+      165,
+      42,
+      42
+    ]
+  },
+  {
+    "label": "2.99\nSignature Select Baked Beans",
+    "bbox": [
+      0.035,
+      0.472,
+      0.183,
+      0.562
+    ],
+    "color": [
+      128,
+      0,
+      128,
+      80
+    ],
+    "outline": [
+      0,
+      255,
+      255
+    ]
+  },
+  {
+    "label": "2.99\nLawry's Marinade",
+    "bbox": [
+      0.191,
+      0.472,
+      0.335,
+      0.562
+    ],
+    "color": [
+      255,
+      0,
+      0,
+      80
+    ],
+    "outline": [
+      128,
+      0,
+      128
+    ]
+  },
+  {
+    "label": "2 for $4\nSignature Select Tortilla Chips",
+    "bbox": [
+      0.342,
+      0.473,
+      0.485,
+      0.562
+    ],
+    "color": [
+      0,
+      128,
+      128,
+      80
+    ],
+    "outline": [
+      255,
+      0,
+      0
+    ]
+  },
+  {
+    "label": "5.49\nReynolds Aluminum Foil",
+    "bbox": [
+      0.491,
+      0.493,
+      0.64,
+      0.561
+    ],
+    "color": [
+      128,
+      128,
+      0,
+      80
+    ],
+    "outline": [
+      0,
+      128,
+      128
+    ]
+  },
+  {
+    "label": "5.49\nA-1 Steak Sauce",
+    "bbox": [
+      0.035,
+      0.566,
+      0.183,
+      0.658
+    ],
+    "color": [
+      255,
+      165,
+      0,
+      80
+    ],
+    "outline": [
+      128,
+      128,
+      0
+    ]
+  },
+  {
+    "label": "4.99\nKinder's Rubs",
+    "bbox": [
+      0.192,
+      0.567,
+      0.332,
+      0.66
+    ],
+    "color": [
+      0,
+      255,
+      0,
+      80
+    ],
+    "outline": [
+      255,
+      165,
+      0
+    ]
+  },
+  {
+    "label": "Buy 1 Get 1 50% off\nBBQ Tools and Accessories",
+    "bbox": [
+      0.341,
+      0.564,
+      0.485,
+      0.66
+    ],
+    "color": [
+      0,
+      0,
+      255,
+      80
+    ],
+    "outline": [
+      0,
+      255,
+      0
+    ]
+  },
+  {
+    "label": "8.99\nKingsford Charcoal Briquets",
+    "bbox": [
+      0.49,
+      0.568,
+      0.64,
+      0.66
+    ],
+    "color": [
+      255,
+      192,
+      203,
+      80
+    ],
+    "outline": [
+      0,
+      0,
+      255
+    ]
+  },
+  {
+    "label": "5.99\nGraduation Balloons",
+    "bbox": [
+      0.035,
+      0.713,
+      0.231,
+      0.806
+    ],
+    "color": [
+      165,
+      42,
+      42,
+      80
+    ],
+    "outline": [
+      255,
+      192,
+      203
+    ]
+  },
+  {
+    "label": "29.99\nGraduation Cake",
+    "bbox": [
+      0.24,
+      0.714,
+      0.435,
+      0.806
+    ],
+    "color": [
+      0,
+      255,
+      255,
+      80
+    ],
+    "outline": [
+      165,
+      42,
+      42
+    ]
+  },
+  {
+    "label": "12.99\nGraduation Cupcakes",
+    "bbox": [
+      0.444,
+      0.716,
+      0.64,
+      0.806
+    ],
+    "color": [
+      128,
+      0,
+      128,
+      80
+    ],
+    "outline": [
+      0,
+      255,
+      255
+    ]
+  },
+  {
+    "label": "14.99\nSnack Squares",
+    "bbox": [
+      0.035,
+      0.811,
+      0.231,
+      0.908
+    ],
+    "color": [
+      255,
+      0,
+      0,
+      80
+    ],
+    "outline": [
+      128,
+      0,
+      128
+    ]
+  },
+  {
+    "label": "29.99\nStore Made Party Trays",
+    "bbox": [
+      0.24,
+      0.812,
+      0.435,
+      0.908
+    ],
+    "color": [
+      0,
+      128,
+      128,
+      80
+    ],
+    "outline": [
+      255,
+      0,
+      0
+    ]
+  },
+  {
+    "label": "54.99\n50 Piece Fried Chicken",
+    "bbox": [
+      0.446,
+      0.812,
+      0.643,
+      0.908
+    ],
+    "color": [
+      128,
+      128,
+      0,
+      80
+    ],
+    "outline": [
+      0,
+      128,
+      128
+    ]
+  }
+]

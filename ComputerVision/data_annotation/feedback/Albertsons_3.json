@@ -1,0 +1,222 @@
+[
+  {
+    "label": "$30 off\nFIRST online order",
+    "bbox": [
+      0.046,
+      0.134,
+      0.579,
+      0.245
+    ],
+    "color": [
+      235,
+      64,
+      52,
+      80
+    ],
+    "outline": [
+      141,
+      38,
+      31
+    ]
+  },
+  {
+    "label": "3.99 ea\nSignature Select Ground Beef",
+    "bbox": [
+      0.046,
+      0.245,
+      0.301,
+      0.37
+    ],
+    "color": [
+      52,
+      235,
+      122,
+      80
+    ],
+    "outline": [
+      31,
+      141,
+      73
+    ]
+  },
+  {
+    "label": "2.99 ea\nPersonal Watermelon",
+    "bbox": [
+      0.32,
+      0.245,
+      0.579,
+      0.37
+    ],
+    "color": [
+      52,
+      95,
+      235,
+      80
+    ],
+    "outline": [
+      31,
+      57,
+      141
+    ]
+  },
+  {
+    "label": "2$5\nSabra Hummus",
+    "bbox": [
+      0.046,
+      0.377,
+      0.301,
+      0.502
+    ],
+    "color": [
+      235,
+      52,
+      201,
+      80
+    ],
+    "outline": [
+      141,
+      31,
+      120
+    ]
+  },
+  {
+    "label": "99c ea\nSignature Select Hot Dog or Hamburger Buns",
+    "bbox": [
+      0.32,
+      0.377,
+      0.579,
+      0.502
+    ],
+    "color": [
+      235,
+      198,
+      52,
+      80
+    ],
+    "outline": [
+      141,
+      118,
+      31
+    ]
+  },
+  {
+    "label": "15.99 ea\nTwisted Tea",
+    "bbox": [
+      0.046,
+      0.508,
+      0.301,
+      0.633
+    ],
+    "color": [
+      52,
+      235,
+      235,
+      80
+    ],
+    "outline": [
+      31,
+      141,
+      141
+    ]
+  },
+  {
+    "label": "2$5\nSmithfield Prime Fresh Lunchmeat",
+    "bbox": [
+      0.32,
+      0.508,
+      0.579,
+      0.633
+    ],
+    "color": [
+      155,
+      52,
+      235,
+      80
+    ],
+    "outline": [
+      93,
+      31,
+      141
+    ]
+  },
+  {
+    "label": "2.99 ea\nEggland's Best Eggs",
+    "bbox": [
+      0.046,
+      0.639,
+      0.301,
+      0.765
+    ],
+    "color": [
+      235,
+      125,
+      52,
+      80
+    ],
+    "outline": [
+      141,
+      75,
+      31
+    ]
+  },
+  {
+    "label": "3.99 ea\nEl Monterey Family Pack Burritos or Chimichangas",
+    "bbox": [
+      0.32,
+      0.639,
+      0.579,
+      0.765
+    ],
+    "color": [
+      125,
+      235,
+      52,
+      80
+    ],
+    "outline": [
+      75,
+      141,
+      31
+    ]
+  },
+  {
+    "label": "12.99 ea\nFrito Lay Variety Pack",
+    "bbox": [
+      0.046,
+      0.771,
+      0.301,
+      0.896
+    ],
+    "color": [
+      235,
+      52,
+      95,
+      80
+    ],
+    "outline": [
+      141,
+      31,
+      57
+    ]
+  },
+  {
+    "label": "6.99 ea\nPremier Protein Shake",
+    "bbox": [
+      0.32,
+      0.771,
+      0.579,
+      0.896
+    ],
+    "color": [
+      52,
+      155,
+      235,
+      80
+    ],
+    "outline": [
+      31,
+      93,
+      141
+    ]
+  }
+]

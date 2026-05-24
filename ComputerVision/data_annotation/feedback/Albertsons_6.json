@@ -1,0 +1,782 @@
+[
+  {
+    "label": "10% off\nWINE when you buy 6\n750 ml., mix or match in a single transaction",
+    "bbox": [
+      0.0461,
+      0.0543,
+      0.1983,
+      0.1118
+    ],
+    "color": [
+      235,
+      126,
+      212,
+      80
+    ],
+    "outline": [
+      141,
+      75,
+      127
+    ]
+  },
+  {
+    "label": "$15.99 ea\nErath, Joel Gott or King Estate 750 ml., select varieties",
+    "bbox": [
+      0.0461,
+      0.1118,
+      0.201,
+      0.2798
+    ],
+    "color": [
+      71,
+      252,
+      112,
+      80
+    ],
+    "outline": [
+      42,
+      151,
+      67
+    ]
+  },
+  {
+    "label": "$14.99 ea\nMichelob Ultra or Bud Light Chelada 12 pk., 12 oz. cans or btls., select varieties",
+    "bbox": [
+      0.0461,
+      0.2926,
+      0.201,
+      0.4184
+    ],
+    "color": [
+      253,
+      147,
+      167,
+      80
+    ],
+    "outline": [
+      151,
+      88,
+      100
+    ]
+  },
+  {
+    "label": "$17.99 ea\nCorona, Happy Dad, Lone River or Kettlehouse 8-12 pk., 12-16 oz. cans or btls., select varieties",
+    "bbox": [
+      0.0461,
+      0.4227,
+      0.201,
+      0.5691
+    ],
+    "color": [
+      116,
+      123,
+      237,
+      80
+    ],
+    "outline": [
+      69,
+      73,
+      142
+    ]
+  },
+  {
+    "label": "$16.99 ea\nBud, Coors or Miller 18 pk., 12 oz. cans, select varieties",
+    "bbox": [
+      0.0461,
+      0.5753,
+      0.2038,
+      0.722
+    ],
+    "color": [
+      239,
+      176,
+      94,
+      80
+    ],
+    "outline": [
+      143,
+      105,
+      56
+    ]
+  },
+  {
+    "label": "$19.99 ea\nBusch, Keystone, Pabst or Rainier 30 pk., 12 oz. cans, select varieties",
+    "bbox": [
+      0.0461,
+      0.723,
+      0.2038,
+      0.8658
+    ],
+    "color": [
+      160,
+      180,
+      251,
+      80
+    ],
+    "outline": [
+      96,
+      108,
+      150
+    ]
+  },
+  {
+    "label": "Save $5*\nwhen you spend $25 on select pet products.",
+    "bbox": [
+      0.0461,
+      0.8711,
+      0.3735,
+      0.9234
+    ],
+    "color": [
+      118,
+      229,
+      211,
+      80
+    ],
+    "outline": [
+      70,
+      137,
+      126
+    ]
+  },
+  {
+    "label": "$3.99 lb\nSignature Select Center Cut Pork Loin Chops bone-in, value pack",
+    "bbox": [
+      0.2311,
+      0.543,
+      0.606,
+      0.1423
+    ],
+    "color": [
+      121,
+      224,
+      189,
+      80
+    ],
+    "outline": [
+      72,
+      134,
+      113
+    ]
+  },
+  {
+    "label": "$9.99 lb\nOrange Roughy Fillet previously frozen",
+    "bbox": [
+      0.612,
+      0.0543,
+      0.7431,
+      0.1423
+    ],
+    "color": [
+      88,
+      230,
+      139,
+      80
+    ],
+    "outline": [
+      52,
+      138,
+      83
+    ]
+  },
+  {
+    "label": "$7.99 lb\nUSDA CHOICE Beef Chuck Short Ribs bone-in",
+    "bbox": [
+      0.2148,
+      0.1433,
+      0.3392,
+      0.2227
+    ],
+    "color": [
+      237,
+      147,
+      89,
+      80
+    ],
+    "outline": [
+      142,
+      88,
+      53
+    ]
+  },
+  {
+    "label": "$7.99 lb\nUSDA CHOICE Beef Kabobs plain or marinated, sold in the butcher block",
+    "bbox": [
+      0.3541,
+      0.1433,
+      0.4784,
+      0.2227
+    ],
+    "color": [
+      233,
+      198,
+      120,
+      80
+    ],
+    "outline": [
+      139,
+      118,
+      72
+    ]
+  },
+  {
+    "label": "$4.99 ea\nButterball 93% Lean Ground Turkey 16 oz., select varieties",
+    "bbox": [
+      0.4851,
+      0.1433,
+      0.6108,
+      0.2227
+    ],
+    "color": [
+      202,
+      187,
+      211,
+      80
+    ],
+    "outline": [
+      121,
+      112,
+      126
+    ]
+  },
+  {
+    "label": "$14.99 lb\nDungeness Crab Clusters previously frozen",
+    "bbox": [
+      0.612,
+      0.1433,
+      0.7431,
+      0.2227
+    ],
+    "color": [
+      125,
+      229,
+      97,
+      80
+    ],
+    "outline": [
+      75,
+      137,
+      58
+    ]
+  },
+  {
+    "label": "$5.99 ea\nSignature Select Bratwurst or Italian Sausage Links 19 oz., select varieties",
+    "bbox": [
+      0.2148,
+      0.2227,
+      0.3473,
+      0.3126
+    ],
+    "color": [
+      133,
+      252,
+      137,
+      80
+    ],
+    "outline": [
+      79,
+      151,
+      82
+    ]
+  },
+  {
+    "label": "$8.99 ea\nKevin's Natural Foods Chicken Entrees 16 oz or Pilgrim's Air Fryer Wings 19.2 oz., select varieties",
+    "bbox": [
+      0.4851,
+      0.2227,
+      0.6108,
+      0.3126
+    ],
+    "color": [
+      188,
+      211,
+      245,
+      80
+    ],
+    "outline": [
+      112,
+      126,
+      147
+    ]
+  },
+  {
+    "label": "2 for $8\nReser's Main St. Bistro Baked or Roasted Side Dishes 17-20 oz., select varieties",
+    "bbox": [
+      0.3541,
+      0.2227,
+      0.4784,
+      0.3126
+    ],
+    "color": [
+      176,
+      175,
+      109,
+      80
+    ],
+    "outline": [
+      105,
+      105,
+      65
+    ]
+  },
+  {
+    "label": "$11.99 lb\nFresh Norwegian Salmon Fillet farm raised",
+    "bbox": [
+      0.612,
+      0.2227,
+      0.7431,
+      0.3126
+    ],
+    "color": [
+      231,
+      231,
+      229,
+      80
+    ],
+    "outline": [
+      138,
+      138,
+      137
+    ]
+  },
+  {
+    "label": "$3.99 lb\nYellow Peach or Nectarines",
+    "bbox": [
+      0.3014,
+      0.3155,
+      0.606,
+      0.4137
+    ],
+    "color": [
+      202,
+      88,
+      227,
+      80
+    ],
+    "outline": [
+      121,
+      52,
+      136
+    ]
+  },
+  {
+    "label": "$5.00 ea\nGuacamole 14 oz. mild, spicy or hatch",
+    "bbox": [
+      0.612,
+      0.3344,
+      0.7444,
+      0.4137
+    ],
+    "color": [
+      234,
+      137,
+      180,
+      80
+    ],
+    "outline": [
+      140,
+      82,
+      108
+    ]
+  },
+  {
+    "label": "2 for $7\nFresh Express Chopped Salad Kit 6-13 oz.",
+    "bbox": [
+      0.2148,
+      0.4155,
+      0.3473,
+      0.5012
+    ],
+    "color": [
+      205,
+      148,
+      145,
+      80
+    ],
+    "outline": [
+      123,
+      88,
+      87
+    ]
+  },
+  {
+    "label": "$3.49 ea\nNatureSweet Cherubs Tomatoes 10 oz.",
+    "bbox": [
+      0.3541,
+      0.4155,
+      0.4784,
+      0.5012
+    ],
+    "color": [
+      155,
+      250,
+      136,
+      80
+    ],
+    "outline": [
+      93,
+      150,
+      81
+    ]
+  },
+  {
+    "label": "$5.99 lb\nCherries",
+    "bbox": [
+      0.4851,
+      0.4155,
+      0.6108,
+      0.5012
+    ],
+    "color": [
+      227,
+      157,
+      222,
+      80
+    ],
+    "outline": [
+      136,
+      94,
+      133
+    ]
+  },
+  {
+    "label": "$5.99 ea\nBacon Stuffed Jalapenos 10 oz.",
+    "bbox": [
+      0.612,
+      0.4155,
+      0.7444,
+      0.5012
+    ],
+    "color": [
+      96,
+      104,
+      241,
+      80
+    ],
+    "outline": [
+      57,
+      62,
+      144
+    ]
+  },
+  {
+    "label": "79¢ ea\nCucumbers",
+    "bbox": [
+      0.2148,
+      0.504,
+      0.3473,
+      0.5891
+    ],
+    "color": [
+      197,
+      224,
+      191,
+      80
+    ],
+    "outline": [
+      118,
+      134,
+      114
+    ]
+  },
+  {
+    "label": "$3.99 ea\nMini Red or Gold Potatoes 24 oz.",
+    "bbox": [
+      0.3541,
+      0.504,
+      0.4784,
+      0.5891
+    ],
+    "color": [
+      131,
+      248,
+      94,
+      80
+    ],
+    "outline": [
+      78,
+      148,
+      56
+    ]
+  },
+  {
+    "label": "$3.99 ea\nCantaloupes",
+    "bbox": [
+      0.4851,
+      0.504,
+      0.6108,
+      0.5891
+    ],
+    "color": [
+      113,
+      84,
+      165,
+      80
+    ],
+    "outline": [
+      67,
+      50,
+      99
+    ]
+  },
+  {
+    "label": "$7.99 ea\nMelon Medley Bowl 32 oz.",
+    "bbox": [
+      0.612,
+      0.504,
+      0.7444,
+      0.5891
+    ],
+    "color": [
+      93,
+      224,
+      245,
+      80
+    ],
+    "outline": [
+      55,
+      134,
+      147
+    ]
+  },
+  {
+    "label": "$7.99 lb\nPrimo Taglio Classic Swiss and Baby Swiss Cheese sliced to order",
+    "bbox": [
+      0.2148,
+      0.609,
+      0.4811,
+      0.6508
+    ],
+    "color": [
+      239,
+      139,
+      199,
+      80
+    ],
+    "outline": [
+      143,
+      83,
+      119
+    ]
+  },
+  {
+    "label": "$13.99 lb\nDouble R Ranch Roast Beef homestyle or London broil",
+    "bbox": [
+      0.2148,
+      0.6508,
+      0.4811,
+      0.6866
+    ],
+    "color": [
+      138,
+      118,
+      211,
+      80
+    ],
+    "outline": [
+      82,
+      70,
+      126
+    ]
+  },
+  {
+    "label": "BUY 1 GET 1 FREE\nCafe Valley Mini Muffins 12 ct., select varieties",
+    "bbox": [
+      0.4891,
+      0.609,
+      0.612,
+      0.6866
+    ],
+    "color": [
+      117,
+      146,
+      236,
+      80
+    ],
+    "outline": [
+      70,
+      87,
+      141
+    ]
+  },
+  {
+    "label": "$11.99 ea\nBoston Creme Cake 8 in., round, select varieties",
+    "bbox": [
+      0.6174,
+      0.609,
+      0.7484,
+      0.6866
+    ],
+    "color": [
+      155,
+      155,
+      129,
+      80
+    ],
+    "outline": [
+      93,
+      93,
+      77
+    ]
+  },
+  {
+    "label": "$5.99 ea\nPretzel Bun Sandwich Duo select varieties",
+    "bbox": [
+      0.2148,
+      0.6885,
+      0.3473,
+      0.7711
+    ],
+    "color": [
+      107,
+      103,
+      180,
+      80
+    ],
+    "outline": [
+      64,
+      61,
+      108
+    ]
+  },
+  {
+    "label": "$6.99 ea\nFirehook Crackers 5.5 oz., select varieties",
+    "bbox": [
+      0.3541,
+      0.6885,
+      0.4784,
+      0.7711
+    ],
+    "color": [
+      87,
+      216,
+      94,
+      80
+    ],
+    "outline": [
+      52,
+      129,
+      56
+    ]
+  },
+  {
+    "label": "2 for $3\nMini Fruit Pie 3.25-4.00 oz., select varieties",
+    "bbox": [
+      0.4851,
+      0.6885,
+      0.6108,
+      0.7711
+    ],
+    "color": [
+      176,
+      252,
+      229,
+      80
+    ],
+    "outline": [
+      105,
+      151,
+      137
+    ]
+  },
+  {
+    "label": "$3.99 ea\nDave's Killer Bread Thin-Sliced Bread 20.5 oz., select varieties",
+    "bbox": [
+      0.612,
+      0.6885,
+      0.7484,
+      0.7711
+    ],
+    "color": [
+      123,
+      173,
+      198,
+      80
+    ],
+    "outline": [
+      73,
+      103,
+      118
+    ]
+  },
+  {
+    "label": "$6.99 ea\nBotanical Blooms Bouquet",
+    "bbox": [
+      0.2148,
+      0.7925,
+      0.3473,
+      0.8711
+    ],
+    "color": [
+      160,
+      161,
+      83,
+      80
+    ],
+    "outline": [
+      96,
+      96,
+      49
+    ]
+  },
+  {
+    "label": "Starting at\n$8.99 ea\nAssorted Blooming",
+    "bbox": [
+      0.3541,
+      0.7925,
+      0.4784,
+      0.8711
+    ],
+    "color": [
+      130,
+      103,
+      211,
+      80
+    ],
+    "outline": [
+      78,
+      61,
+      126
+    ]
+  },
+  {
+    "label": "Starting at\n$14.99 ea\nOrchids",
+    "bbox": [
+      0.4851,
+      0.7925,
+      0.6108,
+      0.8711
+    ],
+    "color": [
+      237,
+      112,
+      204,
+      80
+    ],
+    "outline": [
+      142,
+      67,
+      122
+    ]
+  },
+  {
+    "label": "$19.99 ea\nCitrus Bouquet",
+    "bbox": [
+      0.612,
+      0.7925,
+      0.7484,
+      0.8711
+    ],
+    "color": [
+      180,
+      205,
+      212,
+      80
+    ],
+    "outline": [
+      108,
+      123,
+      127
+    ]
+  }
+]

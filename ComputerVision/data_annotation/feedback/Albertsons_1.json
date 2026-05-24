@@ -1,0 +1,342 @@
+[
+  {
+    "label": "399\nea\nwith digital coupon\nMix & Match Strawberries, Blueberries or Raspberries",
+    "bbox": [
+      0.046,
+      0.076,
+      0.344,
+      0.281
+    ],
+    "color": [
+      54,
+      50,
+      14,
+      80
+    ],
+    "outline": [
+      149,
+      120,
+      67
+    ]
+  },
+  {
+    "label": "$7\nlb\nHot Wings or Chicken Tenders",
+    "bbox": [
+      0.385,
+      0.038,
+      0.578,
+      0.138
+    ],
+    "color": [
+      37,
+      112,
+      63,
+      80
+    ],
+    "outline": [
+      133,
+      172,
+      131
+    ]
+  },
+  {
+    "label": "399\nea\nSignature Select Mandarins",
+    "bbox": [
+      0.354,
+      0.141,
+      0.578,
+      0.278
+    ],
+    "color": [
+      110,
+      114,
+      76,
+      80
+    ],
+    "outline": [
+      165,
+      178,
+      119
+    ]
+  },
+  {
+    "label": "169\nlb\nSignature Select Assorted Pork Loin Chops",
+    "bbox": [
+      0.05,
+      0.283,
+      0.244,
+      0.384
+    ],
+    "color": [
+      175,
+      141,
+      21,
+      80
+    ],
+    "outline": [
+      233,
+      242,
+      69
+    ]
+  },
+  {
+    "label": "799\nlb\nUSDA CHOICE Beef Top Sirloin Steak value pack or Chuck Roast",
+    "bbox": [
+      0.266,
+      0.279,
+      0.564,
+      0.493
+    ],
+    "color": [
+      126,
+      66,
+      137,
+      80
+    ],
+    "outline": [
+      166,
+      109,
+      175
+    ]
+  },
+  {
+    "label": "899\nea\nBogle Cabernet Sauvignon",
+    "bbox": [
+      0.269,
+      0.383,
+      0.385,
+      0.493
+    ],
+    "color": [
+      33,
+      174,
+      56,
+      80
+    ],
+    "outline": [
+      80,
+      242,
+      77
+    ]
+  },
+  {
+    "label": "89c\nea\nMedium Hass Avocados or Mangos",
+    "bbox": [
+      0.046,
+      0.386,
+      0.263,
+      0.49
+    ],
+    "color": [
+      202,
+      106,
+      65,
+      80
+    ],
+    "outline": [
+      236,
+      180,
+      112
+    ]
+  },
+  {
+    "label": "349\nea\nNabisco Family Size! Oreo Cookies or Honey Maid Graham Crackers",
+    "bbox": [
+      0.048,
+      0.528,
+      0.178,
+      0.621
+    ],
+    "color": [
+      37,
+      168,
+      211,
+      80
+    ],
+    "outline": [
+      67,
+      241,
+      231
+    ]
+  },
+  {
+    "label": "349\nea\nSignature Select Frozen Pizza",
+    "bbox": [
+      0.18,
+      0.526,
+      0.31,
+      0.62
+    ],
+    "color": [
+      56,
+      87,
+      29,
+      80
+    ],
+    "outline": [
+      132,
+      174,
+      88
+    ]
+  },
+  {
+    "label": "349\nea\nTillamook Ice Cream or Ice Cream Bars",
+    "bbox": [
+      0.313,
+      0.526,
+      0.443,
+      0.62
+    ],
+    "color": [
+      29,
+      85,
+      238,
+      80
+    ],
+    "outline": [
+      113,
+      147,
+      246
+    ]
+  },
+  {
+    "label": "349\nea\nChallenge Butter",
+    "bbox": [
+      0.444,
+      0.528,
+      0.573,
+      0.62
+    ],
+    "color": [
+      167,
+      188,
+      208,
+      80
+    ],
+    "outline": [
+      229,
+      232,
+      245
+    ]
+  },
+  {
+    "label": "499\nea\nSignature Select Cookies",
+    "bbox": [
+      0.046,
+      0.632,
+      0.219,
+      0.741
+    ],
+    "color": [
+      174,
+      35,
+      213,
+      80
+    ],
+    "outline": [
+      214,
+      61,
+      249
+    ]
+  },
+  {
+    "label": "BUY 2 GET 2\nFREE\nDoritos, Ruffles, Cheetos, Simply or Tostitos Salsa",
+    "bbox": [
+      0.228,
+      0.626,
+      0.4,
+      0.741
+    ],
+    "color": [
+      117,
+      233,
+      58,
+      80
+    ],
+    "outline": [
+      160,
+      246,
+      95
+    ]
+  },
+  {
+    "label": "599\nea\nCoca-Cola or Dr Pepper Soft Drinks",
+    "bbox": [
+      0.407,
+      0.625,
+      0.578,
+      0.741
+    ],
+    "color": [
+      230,
+      141,
+      21,
+      80
+    ],
+    "outline": [
+      241,
+      197,
+      65
+    ]
+  },
+  {
+    "label": "1599\nea\nLa Marca Prosecco, Butter, Joel Gott or Vinafore Chardonnay",
+    "bbox": [
+      0.071,
+      0.751,
+      0.311,
+      0.838
+    ],
+    "color": [
+      48,
+      146,
+      81,
+      80
+    ],
+    "outline": [
+      114,
+      205,
+      151
+    ]
+  },
+  {
+    "label": "899\nea\nGeorgetown, White Claw, Blue Moon, New Belgium, Sierra Nevada, Athletic, Trailhead or Big Sky",
+    "bbox": [
+      0.322,
+      0.751,
+      0.578,
+      0.842
+    ],
+    "color": [
+      228,
+      109,
+      126,
+      80
+    ],
+    "outline": [
+      247,
+      180,
+      174
+    ]
+  },
+  {
+    "label": "10 FOR\n$10\nmix&match 50+ Items!",
+    "bbox": [
+      0.046,
+      0.846,
+      0.578,
+      0.932
+    ],
+    "color": [
+      219,
+      13,
+      21,
+      80
+    ],
+    "outline": [
+      252,
+      76,
+      73
+    ]
+  }
+]
