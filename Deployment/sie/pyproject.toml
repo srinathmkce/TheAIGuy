@@ -1,0 +1,14 @@
+[project]
+name = "workspace"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ipykernel>=7.2.0",
+    "ipywidgets>=8.1.8",
+    "kagglehub>=1.0.1",
+    "sie-sdk>=0.5.0",
+    "sie-server>=0.5.0",
+    "tqdm>=4.68.1",
+]
