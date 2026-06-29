@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# uv
+.uv/
+
+# Environment variables
+.env
+.env.*
+
+# Audio / media files
+*.mp3
+*.wav
+*.flac
+*.ogg
+*.m4a
+
+# Generated outputs
+transcript.txt
+transcription_output.txt
+transcription_analysis.html
+*.html
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Model cache
+*.bin
+*.safetensors
+*.pt
+*.ckpt
