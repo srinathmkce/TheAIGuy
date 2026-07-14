@@ -1,0 +1,16 @@
+# Environment
+.venv/
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Gradio
+.gradio/
+
+# OS/editor
+.DS_Store
