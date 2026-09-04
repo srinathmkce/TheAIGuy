@@ -1,0 +1,138 @@
+.app {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 20px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.app__header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.app__header h1 {
+  font-size: 32px;
+  margin: 0 0 6px;
+}
+
+.app__subtitle {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-h);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+
+.btn:hover {
+  background: var(--accent-bg);
+}
+
+.mic-button {
+  padding: 12px 26px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #fff;
+  transition: opacity 0.15s;
+}
+
+.mic-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.mic-button--recording {
+  background: #e0303f;
+}
+
+.mic-button--error {
+  background: #b3261e;
+}
+
+.mic-button__icon {
+  font-size: 18px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text);
+  min-height: 20px;
+  margin-bottom: 10px;
+}
+
+.status--error {
+  color: #e0303f;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e0303f;
+  display: inline-block;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.transcript-box {
+  min-height: 240px;
+  max-height: 480px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  font-size: 16px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--code-bg);
+}
+
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--accent);
+  animation: blink 0.8s infinite;
+  vertical-align: text-bottom;
+  margin-left: 1px;
+}
