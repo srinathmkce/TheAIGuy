@@ -1,0 +1,27 @@
+[project]
+name = "wsp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "torch",
+    "accelerate>=1.16.0",
+    "datasets>=5.2.0",
+    "huggingface-hub>=2.4.0",
+    "transformers>=5.23.0",
+    "pillow>=13.0.0",
+    "torchvision>=0.26.0",
+    "python-dotenv>=1.2.4",
+    "openai>=3.52.0",
+    "safetensors>=0.8.0",
+    "mlflow>=3.18.0",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true

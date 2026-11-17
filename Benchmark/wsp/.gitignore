@@ -1,0 +1,34 @@
+# Secrets
+.env
+.env.*
+
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Large local artifacts (re-create with `uv run python download.py`)
+Qwen3.5-0.8B/
+data/
+cache/
+
+# Agent run outputs: weight deltas and per-run logs
+*.safetensors
+results/agent_*/
+agent_run.log
+nohup.out
+*.log
+
+# MLflow local stores (the server writes these if started from this folder)
+mlruns/
+mlartifacts/
+mlflow.db
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+.env/
