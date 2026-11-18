@@ -16,16 +16,38 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from dotenv import dotenv_values
-from openai import OpenAI
+from dotenv import dotenv_values, load_dotenv
 from safetensors import safe_open
 from safetensors.torch import load_file, save_file
 from transformers import AutoModelForImageTextToText
+
+# Langfuse reads its credentials from the environment, so load .env BEFORE importing/initialising it,
+# and import the Langfuse-wrapped OpenAI client (drop-in) so every Responses call becomes a `generation`.
+load_dotenv(Path(__file__).parent / ".env")
+from langfuse import Langfuse, LangfuseMedia, get_client, propagate_attributes  # noqa: E402
+from langfuse.openai import OpenAI  # noqa: E402
+
+
+
+def _mask(data, **kwargs):
+    """Drop OpenAI's opaque `encrypted_content` reasoning blobs from traces (large, unreadable noise); the readable
+    reasoning *summary* is kept."""
+    if isinstance(data, dict):
+        return {k: ("[omitted]" if k == "encrypted_content" and v else _mask(v)) for k, v in data.items()}
+    if isinstance(data, list):
+        return [_mask(v) for v in data]
+    return data
+
+
+Langfuse(mask=_mask)  # initialise the global client with masking; get_client() below returns this instance
 
 ROOT = Path(__file__).parent
 MODEL_DIR = ROOT / "Qwen3.5-0.8B"
 BENCH = ROOT / "benchmark.py"
 N_SAMPLES = 500
+BATCH_SIZE = None  # forwarded to benchmark.py --batch-size when set (set from --batch-size in main)
+
+TOOL_OBS = {"python": "execute-python", "run_benchmark": "run-benchmark", "revert": "revert-weights", "finish": "finish-session"}
 
 SYSTEM = """You are a weight-space programmer. You improve a small multimodal model by reading and directly editing its weights.
 
@@ -190,6 +212,8 @@ class Workspace:
 
 def run_bench(delta_path, out_dir, tag, n=N_SAMPLES, run_name=None, stage="agent_iteration", parent=None, note="", iteration=0):
     cmd = [sys.executable, str(BENCH), "--n", str(n), "--out-dir", str(out_dir), "--tag", tag]
+    if BATCH_SIZE:
+        cmd += ["--batch-size", str(BATCH_SIZE)]
     cmd += ["--run-name", run_name or tag, "--stage", stage, "--note", note, "--iteration", str(iteration)]
     if parent:
         cmd += ["--parent-run-id", parent]
@@ -216,16 +240,58 @@ def summarize_run(metrics, preds, delta, base_acc, k=12):
     }
 
 
+def aggregate_results():
+    """Combine every agent run into results/all_runs.csv (one row per run x scenario).
+    Runs with an iteration_results.csv are used as-is; older runs are rebuilt from summary.json (+ metrics_iter*.json)."""
+    import pandas as pd
+    frames = []
+    for d in sorted((ROOT / "results").glob("agent_*")):
+        csv_path, summ = d / "iteration_results.csv", d / "summary.json"
+        if csv_path.exists():
+            df = pd.read_csv(csv_path)
+        elif summ.exists():
+            sj = json.loads(summ.read_text())
+            base = sj["baseline_accuracy"]
+            rows = []
+            for h in sj["history"]:
+                it = h["tune_iter"]
+                mf = d / f"metrics_iter{it}.json"
+                m = json.loads(mf.read_text()) if mf.exists() else {}
+                rows.append({"scenario": "baseline" if it == 0 else f"iteration_{it}", "iteration": it, "accuracy": h["accuracy"],
+                             "delta_vs_baseline": round(h["accuracy"] - base, 4), "edited_tensors": h.get("edited_tensors", 0),
+                             "edited_parameters": h.get("edited_parameters", 0), "n_samples": m.get("n_samples", sj.get("n_samples")), "batch_size": m.get("batch_size"),
+                             "inference_seconds": m.get("inference_seconds"), "peak_gpu_mem_gb": m.get("peak_gpu_mem_gb"),
+                             "note": h.get("note", ""), "agent_model": sj.get("agent_model"), "timestamp": m.get("timestamp"),
+                             "is_best": it == sj.get("best_iteration")})
+            df = pd.DataFrame(rows)
+        else:
+            continue  # run produced no results (e.g. crashed before the baseline)
+        df.insert(0, "run_id", d.name.removeprefix("agent_"))
+        frames.append(df)
+    alldf = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+    alldf.to_csv(ROOT / "results" / "all_runs.csv", index=False)
+    return alldf
+
+
 def main():
+    global BATCH_SIZE
     ap = argparse.ArgumentParser()
+    ap.add_argument("--aggregate-only", action="store_true", help="just rebuild results/all_runs.csv from existing runs and exit")
     ap.add_argument("--iterations", type=int, default=10, help="benchmark runs the agent may spend")
     ap.add_argument("--model", default="gpt-6-luna")
     ap.add_argument("--effort", default="medium")
+    ap.add_argument("--reasoning-summary", default="auto", choices=["auto", "concise", "detailed", "none"],
+                    help="ask the model for reasoning summaries so its thinking is captured in Langfuse traces")
     ap.add_argument("--max-turns", type=int, default=120)
     ap.add_argument("--price-in", type=float, default=None, help="USD per 1M input tokens, to log estimated agent cost")
     ap.add_argument("--price-out", type=float, default=None, help="USD per 1M output tokens (incl. reasoning)")
+    ap.add_argument("--batch-size", type=int, default=None, help="inference batch size for every benchmark run (default: benchmark.py's own default)")
     ap.add_argument("--n", type=int, default=N_SAMPLES, help="samples per run (use a small value for smoke tests)")
     args = ap.parse_args()
+    BATCH_SIZE = args.batch_size
+    if args.aggregate_only:
+        print(aggregate_results()[["run_id", "scenario", "accuracy", "delta_vs_baseline", "is_best"]].to_string(index=False))
+        return
 
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     out = ROOT / "results" / f"agent_{run_id}"
@@ -257,6 +323,19 @@ def main():
     client = OpenAI(api_key=dotenv_values(ROOT / ".env")["OPENAI_API_KEY"])
     history = [{"tune_iter": 0, "note": "base", "accuracy": base_acc}]
     best = {"acc": base_acc, "iter": 0}
+    # One row per scenario (baseline + each benchmarked iteration) -> iteration_results.csv (also attached to the Langfuse trace)
+    table = [{"scenario": "baseline", "iteration": 0, "accuracy": base_acc, "delta_vs_baseline": 0.0, "edited_tensors": 0,
+              "edited_parameters": 0, "n_samples": m0.get("n_samples"), "batch_size": m0.get("batch_size"), "inference_seconds": m0.get("inference_seconds"),
+              "peak_gpu_mem_gb": m0.get("peak_gpu_mem_gb"), "note": "unedited base weights", "agent_model": args.model,
+              "timestamp": m0.get("timestamp")}]
+    results_csv = out / "iteration_results.csv"
+    def save_table():
+        import pandas as pd
+        df = pd.DataFrame(table)
+        df["is_best"] = df["iteration"] == best["iter"]
+        df.to_csv(results_csv, index=False)
+        return df
+    save_table()
     used, infra_fails = 0, 0
     wrong0 = [p for p in p0 if not p["correct"]]
     first = {"relaxed_accuracy": base_acc, "wrong_answer_samples": [
@@ -269,75 +348,106 @@ def main():
     usage = {"llm_calls": 0, "llm_input_tokens": 0, "llm_cached_input_tokens": 0, "llm_output_tokens": 0, "llm_reasoning_tokens": 0}
     root = mlflow.start_span(name="agent_session", span_type="AGENT")
     root_span = root.__enter__(); root_span.set_inputs({"model": args.model, "iterations": args.iterations, "n_samples": args.n, "baseline": base_acc})
-    for turn in range(args.max_turns):
-        if finished:
-            break
-        r = client.responses.create(model=args.model, instructions=SYSTEM, input=inp, tools=TOOLS,
-                                    reasoning={"effort": args.effort}, previous_response_id=prev, max_output_tokens=20000)
-        prev, inp = r.id, []
-        u = r.usage
-        usage["llm_calls"] += 1
-        usage["llm_input_tokens"] += u.input_tokens
-        usage["llm_cached_input_tokens"] += u.input_tokens_details.cached_tokens
-        usage["llm_output_tokens"] += u.output_tokens
-        usage["llm_reasoning_tokens"] += u.output_tokens_details.reasoning_tokens
-        calls = [o for o in r.output if o.type == "function_call"]
-        for o in r.output:
-            if o.type == "message":
-                text = "".join(c.text for c in o.content if c.type == "output_text")
-                L(kind="assistant", text=text); print(f"[agent] {text[:400]}", flush=True)
-        if not calls:
-            inp = [{"role": "user", "content": "Continue: call a tool (python / run_benchmark / revert / finish)."}]
-            continue
-        for c in calls:
-            args_j = json.loads(c.arguments or "{}")
-            L(kind="call", name=c.name, args=args_j)
-            tool_cm = mlflow.start_span(name=f"tool:{c.name}", span_type="TOOL")
-            tool_span = tool_cm.__enter__(); tool_span.set_inputs(args_j)
-            if c.name == "python":
-                res = ws.exec(args_j.get("code", ""))
-            elif c.name == "revert":
-                ws.restore(ws.best_state if args_j.get("to") == "best" else None)
-                res = f"reverted to {args_j.get('to')}"
-            elif c.name == "finish":
-                finished, summary, res = True, args_j.get("summary", ""), "ok"
-            elif c.name == "run_benchmark":
-                if used >= args.iterations:
-                    res = "ERROR: iteration budget exhausted. Call finish."
-                else:
-                    used += 1
-                    delta = ws.delta()
-                    dpath = out / f"iter{used}_delta.safetensors"
-                    save_file(delta, str(dpath))
-                    n_par = sum(t.numel() for t in delta.values())
-                    print(f"[iter {used}/{args.iterations}] running benchmark: {len(delta)} tensors changed -- {args_j.get('note','')[:150]}", flush=True)
-                    m, p, err = run_bench(dpath if delta else None, out, f"iter{used}", n=args.n,
-                                    run_name=f"iter{used}", stage="agent_iteration", parent=parent, note=args_j.get("note", ""), iteration=used)
-                    if m is None:  # infrastructure failure, not a result: refund the iteration
-                        used -= 1; infra_fails += 1
-                        res = ("INFRASTRUCTURE ERROR (iteration refunded, not caused by your edit; just call run_benchmark again): "
-                               + err[-600:])
-                        if infra_fails >= 3:
-                            raise RuntimeError(f"benchmark infrastructure failed {infra_fails} times: {err[-500:]}")
+    reasoning = {"effort": args.effort, **({"summary": args.reasoning_summary} if args.reasoning_summary != "none" else {})}
+    langfuse = get_client()
+    # One trace per agent run (a self-contained unit of work); the session id links it to the MLflow run of the same name.
+    with propagate_attributes(trace_name="weight-space-agent-run", session_id=f"agent_{run_id}",
+                              tags=["weight-space-programming", "chartqa"],
+                              metadata={"agent_model": args.model, "target_model": MODEL_DIR.name, "iterations_budget": str(args.iterations),
+                                        "n_samples": str(args.n), "batch_size": str(args.batch_size), "mlflow_run_id": parent}), \
+         langfuse.start_as_current_observation(as_type="agent", name="run-weight-space-agent",
+             input={"task": "improve ChartQA relaxed accuracy of " + MODEL_DIR.name + " by editing weights", "baseline_accuracy": base_acc,
+                    "iterations_budget": args.iterations}) as lf_root:
+        for turn in range(args.max_turns):
+            if finished:
+                break
+            r = client.responses.create(model=args.model, instructions=SYSTEM, input=inp, tools=TOOLS,
+                                        reasoning=reasoning, previous_response_id=prev, max_output_tokens=20000,
+                                        name="agent-turn", metadata={"turn": str(turn), "previous_response_id": str(prev)})
+            prev, inp = r.id, []
+            u = r.usage
+            usage["llm_calls"] += 1
+            usage["llm_input_tokens"] += u.input_tokens
+            usage["llm_cached_input_tokens"] += u.input_tokens_details.cached_tokens
+            usage["llm_output_tokens"] += u.output_tokens
+            usage["llm_reasoning_tokens"] += u.output_tokens_details.reasoning_tokens
+            calls = [o for o in r.output if o.type == "function_call"]
+            for o in r.output:
+                if o.type == "message":
+                    text = "".join(c.text for c in o.content if c.type == "output_text")
+                    L(kind="assistant", text=text); print(f"[agent] {text[:400]}", flush=True)
+            if not calls:
+                inp = [{"role": "user", "content": "Continue: call a tool (python / run_benchmark / revert / finish)."}]
+                continue
+            for c in calls:
+                args_j = json.loads(c.arguments or "{}")
+                L(kind="call", name=c.name, args=args_j)
+                with langfuse.start_as_current_observation(as_type="tool", name=TOOL_OBS.get(c.name, "unknown-tool"),
+                                                          input=args_j, metadata={"tool": c.name, "call_id": c.call_id}) as lf_tool:
+                    tool_cm = mlflow.start_span(name=f"tool:{c.name}", span_type="TOOL")
+                    tool_span = tool_cm.__enter__(); tool_span.set_inputs(args_j)
+                    if c.name == "python":
+                        res = ws.exec(args_j.get("code", ""))
+                    elif c.name == "revert":
+                        ws.restore(ws.best_state if args_j.get("to") == "best" else None)
+                        res = f"reverted to {args_j.get('to')}"
+                    elif c.name == "finish":
+                        finished, summary, res = True, args_j.get("summary", ""), "ok"
+                    elif c.name == "run_benchmark":
+                        if used >= args.iterations:
+                            res = "ERROR: iteration budget exhausted. Call finish."
+                        else:
+                            used += 1
+                            delta = ws.delta()
+                            dpath = out / f"iter{used}_delta.safetensors"
+                            save_file(delta, str(dpath))
+                            n_par = sum(t.numel() for t in delta.values())
+                            print(f"[iter {used}/{args.iterations}] running benchmark: {len(delta)} tensors changed -- {args_j.get('note','')[:150]}", flush=True)
+                            m, p, err = run_bench(dpath if delta else None, out, f"iter{used}", n=args.n,
+                                            run_name=f"iter{used}", stage="agent_iteration", parent=parent, note=args_j.get("note", ""), iteration=used)
+                            if m is None:  # infrastructure failure, not a result: refund the iteration
+                                used -= 1; infra_fails += 1
+                                lf_tool.update(level="WARNING", status_message="benchmark infrastructure failure; iteration refunded")
+                                res = ("INFRASTRUCTURE ERROR (iteration refunded, not caused by your edit; just call run_benchmark again): "
+                                       + err[-600:])
+                                if infra_fails >= 3:
+                                    raise RuntimeError(f"benchmark infrastructure failed {infra_fails} times: {err[-500:]}")
+                            else:
+                                s = summarize_run(m, p, delta, base_acc)
+                                s["edited_parameters"] = n_par
+                                s["iterations_left"] = args.iterations - used
+                                history.append({"tune_iter": used, "note": args_j.get("note", ""), "accuracy": m["relaxed_accuracy"],
+                                                "edited_tensors": len(delta), "edited_parameters": n_par})
+                                table.append({"scenario": f"iteration_{used}", "iteration": used, "accuracy": m["relaxed_accuracy"],
+                                              "delta_vs_baseline": round(m["relaxed_accuracy"] - base_acc, 4),
+                                              "edited_tensors": len(delta), "edited_parameters": n_par, "n_samples": m.get("n_samples"), "batch_size": m.get("batch_size"),
+                                              "inference_seconds": m.get("inference_seconds"), "peak_gpu_mem_gb": m.get("peak_gpu_mem_gb"),
+                                              "note": args_j.get("note", ""), "agent_model": args.model, "timestamp": m.get("timestamp")})
+                                if m["relaxed_accuracy"] > best["acc"]:
+                                    best, ws.best_state = {"acc": m["relaxed_accuracy"], "iter": used}, delta
+                                    s["new_best"] = True
+                                save_table()
+                                lf_tool.update(metadata={"iteration": str(used), "edited_tensors": str(len(delta)), "edited_parameters": str(n_par)})
+                                lf_tool.score(name="relaxed_accuracy", value=m["relaxed_accuracy"], comment=args_j.get("note", "")[:500])
+                                print(f"[iter {used}] accuracy {m['relaxed_accuracy']:.3f} (base {base_acc:.3f}, best {best['acc']:.3f})", flush=True)
+                                res = json.dumps(s, indent=1)
                     else:
-                        s = summarize_run(m, p, delta, base_acc)
-                        s["edited_parameters"] = n_par
-                        s["iterations_left"] = args.iterations - used
-                        history.append({"tune_iter": used, "note": args_j.get("note", ""), "accuracy": m["relaxed_accuracy"],
-                                        "edited_tensors": len(delta), "edited_parameters": n_par})
-                        if m["relaxed_accuracy"] > best["acc"]:
-                            best, ws.best_state = {"acc": m["relaxed_accuracy"], "iter": used}, delta
-                            s["new_best"] = True
-                        print(f"[iter {used}] accuracy {m['relaxed_accuracy']:.3f} (base {base_acc:.3f}, best {best['acc']:.3f})", flush=True)
-                        res = json.dumps(s, indent=1)
-            else:
-                res = f"unknown tool {c.name}"
-            L(kind="result", name=c.name, result=res[:4000])
-            tool_span.set_outputs(res[:4000])
-            tool_cm.__exit__(None, None, None)
-            inp.append({"type": "function_call_output", "call_id": c.call_id, "output": res})
-            if fingerprint() != guard:
-                raise RuntimeError("Integrity check failed: benchmark/dataset/base weights changed. Aborting.")
+                        res = f"unknown tool {c.name}"
+                    L(kind="result", name=c.name, result=res[:4000])
+                    tool_span.set_outputs(res[:4000])
+                    lf_tool.update(output=res[:4000])
+                    tool_cm.__exit__(None, None, None)
+                    inp.append({"type": "function_call_output", "call_id": c.call_id, "output": res})
+                if fingerprint() != guard:
+                    raise RuntimeError("Integrity check failed: benchmark/dataset/base weights changed. Aborting.")
+        df = save_table()
+        print("\n" + df[["scenario", "accuracy", "delta_vs_baseline", "is_best"]].to_string(index=False), flush=True)
+        lf_root.update(metadata={"iteration_results_csv": LangfuseMedia(content_bytes=results_csv.read_bytes(),
+                                                                        content_type="text/csv")})
+        lf_root.update(output={"best_accuracy": best["acc"], "best_iteration": best["iter"], "baseline_accuracy": base_acc,
+                               "iterations_used": used, "history": history, "agent_summary": summary})
+        lf_root.score_trace(name="best_relaxed_accuracy", value=best["acc"])
+        lf_root.score_trace(name="improvement_vs_baseline", value=round(best["acc"] - base_acc, 4))
 
     root.__exit__(None, None, None)
     # No held-out set: every run (baseline and iterations) uses the same 500 samples, so scores are directly comparable.
@@ -372,7 +482,10 @@ def main():
     final["agent_usage"] = {**usage, **cost}
     (out / "summary.json").write_text(json.dumps(final, indent=2))
     mlflow.log_artifact(str(out / "summary.json")); mlflow.log_artifact(str(out / "transcript.jsonl"))
+    mlflow.log_artifact(str(results_csv))
+    aggregate_results()  # refresh results/all_runs.csv now that this run's CSV exists
     mlflow.end_run()
+    langfuse.flush()  # short-lived script: make sure all spans are sent before exit
     print(json.dumps({k: v for k, v in final.items() if k != "history"}, indent=2))
 
 

@@ -32,3 +32,12 @@ mlflow.db
 Thumbs.db
 
 .env/
+
+# --- Results ---------------------------------------------------------------
+# Regenerable aggregate of the local runs: uv run python agent.py --aggregate-only
+results/all_runs.csv
+
+# Cloud GPU (L4) run folders, results/l4_*/: ignore the raw dumps pulled back from the VM
+# (tgz archives, code/lockfile copies, MLflow DB, logs, weight deltas) but keep the analysis data:
+# per-run iteration_results.csv, summary.json, metrics/predictions JSON, transcript, and the run scripts.
+results/*

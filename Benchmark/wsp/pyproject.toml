@@ -16,6 +16,7 @@ dependencies = [
     "openai>=3.52.0",
     "safetensors>=0.8.0",
     "mlflow>=3.18.0",
+    "langfuse>=5.2.0",
 ]
 
 [tool.uv.sources]
