@@ -19,7 +19,25 @@ agent.py  --(python tool: read/edit weights)-->  edited tensors (delta)
 |---|---|
 | `download.py` | Downloads the model to `Qwen3.5-0.8B/` and the ChartQA **test** split to `data/ChartQA_test` |
 | `benchmark.py` | The locked benchmark: load model on GPU, apply an optional weight delta, run the first N test samples, score, log to MLflow, exit |
-| `agent.py` | The agent (OpenAI `gpt-6-luna` via the Responses API). Tools: `python` (sandboxed weight inspection/edit), `run_benchmark`, `revert`, `finish` |
+| `agent.py` | The agent (OpenAI `gpt-6-luna` via the Responses API). Tools: `python` (sandboxed weight inspection/edit on a live GPU copy of the model), `probe` (free, cheap measurement), `run_benchmark`, `revert`, `finish` |
+
+### How the agent edits weights
+
+Earlier versions edited weights blind and could only test an edit with a full benchmark run. They ended up sweeping global
+scale factors, and every result stayed within noise (±0.3 points). The agent now follows the weight-space-programming loop:
+
+1. **Error taxonomy.** Baseline errors are split into *obstacles* (the output format breaks scoring: truncated
+   step-by-step reasoning, the right number with extra text, a value given for a "Which…?" question) and capability
+   errors (misreadings, arithmetic), which edits can't fix.
+2. **Look inside.** In the sandbox, `first_tokens()` and `capture()` read the next-token distribution and residual-stream
+   activations at the answer position. `contrast_direction()` finds a behaviour direction from two groups of samples.
+3. **Directional edit.** `edit_direction(d, layers, factor)` rescales what the chosen layers write along `d`
+   (`W_out ← W_out + (factor−1)·d dᵀ W_out`). This is the refusal-direction-ablation style of edit.
+4. **Probe.** `probe()` scores the current weights on a probe set in about a minute and reports fixed/broken samples vs
+   the unedited model with a sign-test p-value. It uses held-out test samples when `--n` leaves some, otherwise
+   benchmark samples enriched with obstacle cases.
+5. **Benchmark.** The agent spends `run_benchmark` only on edits that probed well. Each result reports gained/lost samples
+   vs the baseline and a sign test, so real gains can be told apart from noise.
 | `results/` | Metrics and predictions per run (`agent_<timestamp>/` holds the agent's transcript, deltas and `summary.json`) |
 
 **Metric.** ChartQA *relaxed accuracy*: numeric answers within 5% of the target, otherwise exact match
@@ -62,7 +80,13 @@ uv run python benchmark.py --n 500 --run-name baseline --stage baseline --note "
 uv run python agent.py --iterations 5 --n 500
 ```
 
-Useful options: `--model gpt-6-luna` (agent model), `--effort medium` (reasoning effort),
+On a VM (e.g. L4): `uv run python agent.py --model gpt-6-astra --iterations 5 --n 2500 --batch-size 32`.
+Use `--n 2000` to keep 500 test samples held out for probing. With `--n 2500` the probe set overlaps the benchmark.
+
+Probe options: `--probe-n 300` (probe set size), `--max-probes 40`, `--probe-batch-size`, `--offload` (move the agent's
+live model to the CPU while the benchmark runs, for small GPUs).
+
+Useful options: `--model gpt-6-luna` (agent model), `--effort high` (reasoning effort),
 `--price-in/--price-out` (USD per 1M tokens, for a manual cost estimate), `--max-turns 120`.
 
 Set `PYTHONUTF8=1` if your console is not UTF-8 (MLflow prints emoji).
