@@ -21,6 +21,23 @@ agent.py  --(python tool: read/edit weights)-->  edited tensors (delta)
 | `benchmark.py` | The locked benchmark: load model on GPU, apply an optional weight delta, run the first N test samples, score, log to MLflow, exit |
 | `agent.py` | The agent (OpenAI `gpt-6-luna` via the Responses API). Tools: `python` (sandboxed weight inspection/edit on a live GPU copy of the model), `probe` (free, cheap measurement), `run_benchmark`, `revert`, `finish` |
 
+### Agent model backends
+
+`agent.py --backend responses` (default) drives OpenAI models (`gpt-6-luna`, `gpt-6-astra`) through the Responses API.
+`agent.py --backend chat --base-url <url> --model <name>` drives any OpenAI-compatible Chat Completions server, e.g.
+**Qwen3.8-27B** served by vLLM on an A100-80GB. The chat backend keeps the conversation locally, sends the model's
+reasoning back each turn (preserved thinking) and trims old tool output before the context window fills.
+
+| Script | Purpose |
+|---|---|
+| `setup_vllm.sh` | one-off: install vLLM into its own venv (`/workspace/vllm-env`) |
+| `run_qwen38.sh` | vLLM + MLflow + tool-call smoke test (`llm_smoke_test.py`) + agent run with Qwen3.8-27B |
+| `run_astra.sh` | the same run with OpenAI `gpt-6-astra`, for comparison |
+| `agent_openai_responses.py` | frozen copy of the original OpenAI-only agent (produced the earlier Astra results) |
+
+Both scripts default to `--n 2000`, which leaves test samples 2000-2499 held out for the agent's probe set, so gains can be
+checked on data the agent did not tune on.
+
 ### How the agent edits weights
 
 Earlier versions edited weights blind and could only test an edit with a full benchmark run. They ended up sweeping global

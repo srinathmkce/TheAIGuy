@@ -41,3 +41,9 @@ results/all_runs.csv
 # (tgz archives, code/lockfile copies, MLflow DB, logs, weight deltas) but keep the analysis data:
 # per-run iteration_results.csv, summary.json, metrics/predictions JSON, transcript, and the run scripts.
 results/*
+# ...except the analysis data of the H100 Qwen3.8-27B agent run (small JSON/CSV/transcript; raw dumps stay ignored)
+!results/h100_*/
+results/h100_*/*.tgz
+results/h100_*/**/*.safetensors
+results/h100_*/**/*.db
+results/h100_*/**/mlartifacts/

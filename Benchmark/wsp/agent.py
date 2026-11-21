@@ -17,7 +17,7 @@ access, and the runner verifies benchmark.py + dataset + base weights are unchan
 
 Usage: uv run python agent.py --iterations 5 --n 2500 --batch-size 32
 """
-import argparse, contextlib, hashlib, io, json, math, random, re, subprocess, sys, time
+import argparse, contextlib, hashlib, io, json, math, os, random, re, subprocess, sys, time
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
@@ -122,6 +122,23 @@ def compare(new, old):
     gained = [r for r in new if r["correct"] and r["idx"] in o and not o[r["idx"]]["correct"]]
     lost = [r for r in new if not r["correct"] and r["idx"] in o and o[r["idx"]]["correct"]]
     return gained, lost
+
+
+def is_dev(idx):
+    """Development half of the benchmark samples: the only ones the agent may look at, probe on or run through the model.
+    The odd-indexed half is reserved: it is still scored by run_benchmark (aggregate numbers only), so the final result
+    can be split into samples the agent tuned on and samples it never saw."""
+    return idx % 2 == 0
+
+
+def split_counts(new, old):
+    """gained/lost vs baseline, separately for the agent's dev half and the unseen test half (for the logs, not the agent)."""
+    g, l = compare(new, old)
+    out = {}
+    for name, keep in (("dev", is_dev), ("test", lambda i: not is_dev(i))):
+        gi, li = sum(keep(r["idx"]) for r in g), sum(keep(r["idx"]) for r in l)
+        out[name] = {"gained": gi, "lost": li, "sign_test_p": sign_test(gi, li)}
+    return out
 
 
 def brief(r, old=None):
@@ -232,8 +249,9 @@ class Engine:
 class Workspace:
     """Editable live weights + sandbox. W maps parameter name -> the model's own nn.Parameter (edits apply instantly)."""
 
-    def __init__(self, engine, probe_idx, base_probe, base_records, max_probes):
+    def __init__(self, engine, probe_idx, base_probe, base_records, max_probes, n_bench):
         self.E = engine
+        self.n_bench = n_bench
         cache = ROOT / "cache" / "base_params.safetensors"
         if not cache.exists():  # parameter names match the module names the benchmark loads the delta into
             cache.parent.mkdir(exist_ok=True)
@@ -291,6 +309,7 @@ class Workspace:
     def _namespace(self, base_records):
         E, ws = self.E, self
         H = E.hidden
+        n_bench = self.n_bench
 
         class Weights:
             def keys(self): return list(E.params)
@@ -315,6 +334,8 @@ class Workspace:
                 raise ValueError(f"at most {cap} indices per call")
             if any(i < 0 or i >= len(E.ds) for i in idxs):
                 raise ValueError("index out of range")
+            if any(i < n_bench and not is_dev(i) for i in idxs):
+                raise ValueError("odd-numbered benchmark samples are reserved for the final evaluation; use even indices (BASE / S)")
             return idxs
 
         def run(idxs, max_new_tokens=MAX_NEW_TOKENS):
@@ -429,7 +450,7 @@ SANDBOX_DOC = """Sandbox (python tool). Variables persist between calls.
 - W: editable weights, name -> the live model's nn.Parameter (edits take effect immediately). W.keys(), W.shape(n), W.peek(n),
   W.items(). Edit in place (W[n].data[...] = ..., W[n].data.mul_(...)) or assign W[n] = tensor.
 - B: untouched base tensors on CPU (B[n], B.keys(), B.shape(n)).
-- BASE: unedited benchmark outputs, one dict per benchmark sample: idx, query, target, prediction, correct, category.
+- BASE: unedited benchmark outputs for the DEV (even-indexed) samples: idx, query, target, prediction, correct, category.
 - S: the probe set with unedited outputs (same keys + raw = full generated text). CATEGORIES: category -> meaning.
 - run(idxs, max_new_tokens=32): generate with the CURRENT weights for <=64 dataset indices -> raw text, prediction, correct, category.
 - first_tokens(idxs, k=8): top-k (token, prob) for the FIRST answer token, <=128 indices.
@@ -475,6 +496,10 @@ Other edits are allowed (norm gains, specific rows/columns, visual merger fc2 bi
 token embedding rows (tied to the output logits)). Global scale sweeps (multiply a tensor or norm by 1.05) were already
 tried extensively in earlier sessions and only produced noise (+-0.3 points), so do not repeat them.
 
+Data split: you may only look at the EVEN-numbered benchmark samples (BASE, S, probe, run, capture, first_tokens). The
+odd-numbered half is reserved and never shown to you, but run_benchmark still scores it, so only edits that generalize can
+raise the benchmark score above what the dev half alone suggests. Do not tune token-by-token to individual dev samples.
+
 Noise: one benchmark sample = 1/N. A change below ~0.5 points with similar gained and lost counts is noise. Check the
 sign-test p-value in every result. Never spend benchmark runs bracketing a scale factor; do that with probe().
 
@@ -499,6 +524,119 @@ TOOLS = [
     {"type": "function", "name": "finish", "description": "Stop and report.",
      "parameters": {"type": "object", "properties": {"summary": {"type": "string"}}, "required": ["summary"]}},
 ]
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# LLM backends. The loop in main() only talks to these two methods:  add_user / add_tool_result  and  step() -> turn.
+#   ResponsesBackend  OpenAI Responses API (gpt-6-luna / gpt-6-astra ...), conversation state kept server-side.
+#   ChatBackend       OpenAI-compatible Chat Completions (vLLM serving Qwen3.8-27B, OpenRouter, Together ...),
+#                     conversation kept here, reasoning round-tripped, context compacted before it overflows.
+# ----------------------------------------------------------------------------------------------------------------------
+class Call:
+    def __init__(self, call_id, name, arguments):
+        self.call_id, self.name, self.arguments = call_id, name, arguments
+
+
+class Turn:
+    def __init__(self, texts, calls, usage, thinking=""):
+        self.texts, self.calls, self.usage, self.thinking = texts, calls, usage, thinking
+
+
+class ResponsesBackend:
+    def __init__(self, client, model, instructions, tools, reasoning, max_output_tokens):
+        self.client, self.model, self.instructions, self.tools = client, model, instructions, tools
+        self.reasoning, self.max_output_tokens = reasoning, max_output_tokens
+        self.pending, self.prev = [], None
+
+    def add_user(self, text):
+        self.pending.append({"role": "user", "content": text})
+
+    def add_tool_result(self, call, output):
+        self.pending.append({"type": "function_call_output", "call_id": call.call_id, "output": output})
+
+    def step(self, turn):
+        r = self.client.responses.create(model=self.model, instructions=self.instructions, input=self.pending, tools=self.tools,
+                                         reasoning=self.reasoning, previous_response_id=self.prev, max_output_tokens=self.max_output_tokens,
+                                         name="agent-turn", metadata={"turn": str(turn), "previous_response_id": str(self.prev)})
+        self.prev, self.pending = r.id, []
+        u = r.usage
+        texts = ["".join(c.text for c in o.content if c.type == "output_text") for o in r.output if o.type == "message"]
+        calls = [Call(o.call_id, o.name, o.arguments) for o in r.output if o.type == "function_call"]
+        return Turn(texts, calls, {"input": u.input_tokens, "cached": u.input_tokens_details.cached_tokens,
+                                   "output": u.output_tokens, "reasoning": u.output_tokens_details.reasoning_tokens})
+
+
+class ChatBackend:
+    def __init__(self, client, model, system, tools, max_tokens, temperature, top_p, top_k, ctx_limit, effort=None):
+        self.client, self.model, self.max_tokens = client, model, max_tokens
+        # Gemini's OpenAI-compatible endpoint: no vLLM-only extra_body, takes reasoning_effort, and every tool call carries an
+        # `extra_content` thought signature that must be echoed back or the next turn is rejected.
+        self.gemini = "generativelanguage.googleapis.com" in str(client.base_url)
+        self.effort = effort
+        self.temperature, self.top_p, self.top_k, self.ctx_limit = temperature, top_p, top_k, ctx_limit
+        self.tools = [{"type": "function", "function": {"name": t["name"], "description": t["description"], "parameters": t["parameters"]}}
+                      for t in tools]
+        self.messages = [{"role": "system", "content": system}]
+        self.last_prompt_tokens = 0
+
+    def add_user(self, text):
+        self.messages.append({"role": "user", "content": text})
+
+    def add_tool_result(self, call, output):
+        self.messages.append({"role": "tool", "tool_call_id": call.call_id, "content": output})
+
+    def compact(self, keep=16, tool_chars=400, code_chars=800):
+        """Shrink OLD context (tool outputs, long code arguments, reasoning); the newest `keep` messages stay intact."""
+        for m in self.messages[1:-keep]:
+            if m["role"] == "tool" and len(m["content"]) > tool_chars:
+                m["content"] = m["content"][:tool_chars] + "\n...[older tool output trimmed to save context]"
+            elif m["role"] == "assistant":
+                m.pop("reasoning_content", None); m.pop("reasoning", None)
+                for tc in m.get("tool_calls", []):
+                    try:
+                        a = json.loads(tc["function"]["arguments"])
+                    except (ValueError, TypeError):
+                        continue
+                    if isinstance(a, dict) and isinstance(a.get("code"), str) and len(a["code"]) > code_chars:
+                        a["code"] = a["code"][:code_chars] + "\n# ...[older code trimmed]"
+                        tc["function"]["arguments"] = json.dumps(a)
+
+    def _create(self, turn):
+        extra = ({"reasoning_effort": self.effort} if self.effort else {}) if self.gemini else             {"extra_body": {"top_k": self.top_k, "chat_template_kwargs": {"enable_thinking": True, "preserve_thinking": True}}}
+        return self.client.chat.completions.create(
+            model=self.model, messages=self.messages, tools=self.tools, tool_choice="auto", temperature=self.temperature,
+            top_p=self.top_p, max_tokens=self.max_tokens, name="agent-turn", metadata={"turn": str(turn)}, **extra)
+
+    def step(self, turn):
+        if self.last_prompt_tokens > 0.8 * self.ctx_limit:
+            self.compact()
+        try:
+            r = self._create(turn)
+        except Exception as e:  # context overflow reported by the server: compact hard once and retry
+            if not re.search(r"context|maximum|too long|max_tokens|max_model_len", str(e), re.I):
+                raise
+            self.compact(keep=6, tool_chars=150, code_chars=300)
+            r = self._create(turn)
+        m = r.choices[0].message
+        md = m.model_dump()
+        thinking = md.get("reasoning_content") or md.get("reasoning") or ""
+        content = m.content or ""
+        asst = {"role": "assistant", "content": content}
+        if thinking:  # vLLM's chat template keeps prior reasoning when it is sent back (preserve_thinking)
+            asst["reasoning_content"] = thinking
+        if m.tool_calls:
+            asst["tool_calls"] = [{"id": tc.id, "type": "function",
+                                   "function": {"name": tc.function.name, "arguments": tc.function.arguments or "{}"},
+                                   **({"extra_content": d["extra_content"]} if d.get("extra_content") else {})}
+                                  for tc, d in zip(m.tool_calls, md["tool_calls"])]
+        self.messages.append(asst)
+        u = r.usage
+        self.last_prompt_tokens = u.prompt_tokens
+        ptd, ctd = getattr(u, "prompt_tokens_details", None), getattr(u, "completion_tokens_details", None)
+        calls = [Call(tc.id, tc.function.name, tc.function.arguments) for tc in (m.tool_calls or [])]
+        return Turn([content] if content.strip() else [], calls,
+                    {"input": u.prompt_tokens, "cached": getattr(ptd, "cached_tokens", 0) or 0,
+                     "output": u.completion_tokens, "reasoning": getattr(ctd, "reasoning_tokens", 0) or 0}, thinking)
 
 
 def sha(path):
@@ -555,13 +693,14 @@ def summarize_run(metrics, preds, p0, best_preds, base_acc):
     gained, lost = compare(preds, p0)
     base = {r["idx"]: r for r in p0}
     rng = random.Random(len(preds))
+    gd, ld = [r for r in gained if is_dev(r["idx"])], [r for r in lost if is_dev(r["idx"])]  # examples: dev half only
     s = {
         "relaxed_accuracy": metrics["relaxed_accuracy"], "delta_vs_baseline": round(metrics["relaxed_accuracy"] - base_acc, 4),
         "vs_baseline": {"gained": len(gained), "lost": len(lost), "sign_test_p": sign_test(len(gained), len(lost))},
         "category_counts_now_vs_baseline": {c: [sum(categorize(r["prediction"], r["target"]) == c for r in preds),
                                                 sum(categorize(r["prediction"], r["target"]) == c for r in p0)] for c in CATEGORY_HELP},
-        "gained_examples": [brief(r, base[r["idx"]]) for r in rng.sample(gained, min(6, len(gained)))],
-        "lost_examples": [brief(r, base[r["idx"]]) for r in rng.sample(lost, min(8, len(lost)))],
+        "gained_examples": [brief(r, base[r["idx"]]) for r in rng.sample(gd, min(6, len(gd)))],
+        "lost_examples": [brief(r, base[r["idx"]]) for r in rng.sample(ld, min(8, len(ld)))],
     }
     if best_preds is not None:
         g, l = compare(preds, best_preds)
@@ -569,18 +708,13 @@ def summarize_run(metrics, preds, p0, best_preds, base_acc):
     return s
 
 
-def choose_probe_set(n_total, n_bench, probe_n, p0, engine, seed=0):
-    """Probe on held-out test samples (indices >= n_bench) when available, otherwise on the benchmark samples.
-    The set is enriched with obstacle cases (half, when there are enough) so fixes are measurable, and the rest is a
-    random sample so regressions on correctly answered samples show up."""
+def choose_probe_set(probe_n, p0_dev, seed=0):
+    """Probe set drawn from the agent's DEV half of the benchmark samples. The test set is ordered by question type
+    (all fixable 'obstacle' cases sit in the first 1250 samples), so a tail split would hold out only easy samples.
+    Half the probe set is obstacle cases, so fixes are measurable; the rest is random, so regressions show up."""
     rng = random.Random(seed)
-    if n_bench + probe_n <= n_total:
-        pool_idx = list(range(n_bench, min(n_total, n_bench + 4 * probe_n)))
-        print(f"Probe pool: {len(pool_idx)} held-out test samples (not in the benchmark); scoring the unedited model...", flush=True)
-        pool, source = engine.score(pool_idx), "held-out test samples (disjoint from the benchmark)"
-    else:
-        pool = [{**r, "category": categorize(r["prediction"], r["target"])} for r in p0]
-        source = "benchmark samples (the benchmark covers the whole test split, so no held-out data exists)"
+    pool = [{**r, "category": categorize(r["prediction"], r["target"])} for r in p0_dev]
+    source = "even-indexed benchmark samples (the agent's dev half; odd-indexed samples are reserved for the final evaluation)"
     obst = [r["idx"] for r in pool if r["category"] in OBSTACLES]
     rng.shuffle(obst)
     pick = obst[:probe_n // 2]
@@ -633,6 +767,17 @@ def main():
     ap.add_argument("--reasoning-summary", default="auto", choices=["auto", "concise", "detailed", "none"],
                     help="ask the model for reasoning summaries so its thinking is captured in Langfuse traces")
     ap.add_argument("--max-turns", type=int, default=250)
+    ap.add_argument("--backend", default="responses", choices=["responses", "chat"],
+                    help="responses = OpenAI Responses API (gpt-6-*; default, unchanged); chat = any OpenAI-compatible Chat Completions "
+                         "server, e.g. vLLM serving Qwen3.8-27B")
+    ap.add_argument("--base-url", default=None, help="OpenAI-compatible endpoint, e.g. http://127.0.0.1:8000/v1 (use with --backend chat)")
+    ap.add_argument("--api-key-env", default=None, help="name of the .env / environment variable holding the API key (default: OPENAI_API_KEY for "
+                                                        "--backend responses; none for --backend chat, which sends a dummy key to a local vLLM server)")
+    ap.add_argument("--temperature", type=float, default=1.0, help="chat backend sampling (Qwen3.8 thinking-mode recommendation)")
+    ap.add_argument("--top-p", type=float, default=0.95)
+    ap.add_argument("--top-k", type=int, default=20)
+    ap.add_argument("--max-output-tokens", type=int, default=None, help="per-turn output cap (default 32000 responses, 16384 chat)")
+    ap.add_argument("--ctx-limit", type=int, default=80000, help="chat backend: server context window; old tool output is trimmed past 80%% of it")
     ap.add_argument("--price-in", type=float, default=None, help="USD per 1M input tokens, to log estimated agent cost")
     ap.add_argument("--price-out", type=float, default=None, help="USD per 1M output tokens (incl. reasoning)")
     ap.add_argument("--batch-size", type=int, default=None, help="inference batch size for every benchmark run (default: benchmark.py's own default)")
@@ -661,7 +806,7 @@ def main():
     mlflow.openai.autolog()  # traces every LLM call (prompts, tool calls, reasoning/usage) in the MLflow Traces tab
     parent_run = mlflow.start_run(run_name=f"agent_{run_id}", tags={"stage": "agent_session", "agent_model": args.model})
     parent = parent_run.info.run_id
-    mlflow.log_params({"agent_model": args.model, "iterations_budget": args.iterations, "n_samples": args.n, "reasoning_effort": args.effort,
+    mlflow.log_params({"agent_model": args.model, "agent_backend": args.backend, "iterations_budget": args.iterations, "n_samples": args.n, "reasoning_effort": args.effort,
                        "probe_n": args.probe_n, "max_probes": args.max_probes})
 
     guard = fingerprint()
@@ -678,16 +823,21 @@ def main():
 
     # Live model for the agent's analysis/probing (the benchmark still runs in its own process from a saved delta).
     engine = Engine(args.device, args.probe_batch_size or args.batch_size or 16)
-    probe_idx, probe_source = choose_probe_set(len(engine.ds), args.n, args.probe_n, p0, engine)
+    p0_dev = [r for r in p0 if is_dev(r["idx"])]
+    probe_idx, probe_source = choose_probe_set(args.probe_n, p0_dev)
     print(f"Probe set: {len(probe_idx)} samples from {probe_source}; scoring the unedited model...", flush=True)
     base_probe = engine.score(probe_idx)
     base_records = [{"idx": r["idx"], "query": r["query"], "target": r["target"], "prediction": r["prediction"],
-                     "correct": r["correct"], "category": categorize(r["prediction"], r["target"])} for r in p0]
-    ws = Workspace(engine, probe_idx, base_probe, base_records, args.max_probes)
+                     "correct": r["correct"], "category": categorize(r["prediction"], r["target"])} for r in p0_dev]
+    ws = Workspace(engine, probe_idx, base_probe, base_records, args.max_probes, args.n)
     base_probe_acc = sum(r["correct"] for r in base_probe) / len(base_probe)
     print(f"unedited probe accuracy = {base_probe_acc:.4f}", flush=True)
 
-    client = OpenAI(api_key=dotenv_values(ROOT / ".env")["OPENAI_API_KEY"])
+    key_env = args.api_key_env or ("OPENAI_API_KEY" if args.backend == "responses" else None)
+    key = (dotenv_values(ROOT / ".env").get(key_env) or os.environ.get(key_env)) if key_env else None
+    key = key or ("EMPTY" if args.backend == "chat" else None)  # a local vLLM server needs no key; never fall back to an OpenAI key
+    assert key, f"{key_env} not found in .env or the environment"
+    client = OpenAI(api_key=key, base_url=args.base_url, **({"timeout": 3600, "max_retries": 2} if args.backend == "chat" else {}))
     history = [{"tune_iter": 0, "note": "base", "accuracy": base_acc}]
     best = {"acc": base_acc, "iter": 0, "preds": None}
     # One row per scenario (baseline + each benchmarked iteration) -> iteration_results.csv (also attached to the Langfuse trace)
@@ -704,19 +854,25 @@ def main():
         return df
     save_table()
     used, infra_fails = 0, 0
-    first = {"benchmark_samples": len(p0), "baseline_relaxed_accuracy": base_acc, "baseline_error_taxonomy": taxonomy(p0),
+    first = {"benchmark_samples": len(p0), "your_dev_samples": len(p0_dev), "baseline_relaxed_accuracy": base_acc,
+             "baseline_dev_accuracy": round(sum(r["correct"] for r in p0_dev) / len(p0_dev), 4), "baseline_error_taxonomy_on_dev_samples": taxonomy(p0_dev),
              "probe_set": {"size": len(probe_idx), "source": probe_source, "unedited_accuracy": round(base_probe_acc, 4),
                            "categories": dict(Counter(r["category"] for r in base_probe))}}
     prompt = (f"Budget: {args.iterations} benchmark runs, {args.max_probes} probes. Baseline (unedited) result:\n"
               + json.dumps(first, indent=1)
               + "\nStart by studying the obstacle categories in BASE/S (raw outputs, first_tokens) and form a hypothesis about the "
                 "behaviour you want to remove before editing anything.")
-    inp, prev, finished, summary = [{"role": "user", "content": prompt}], None, False, ""
+    finished, summary = False, ""
 
     usage = {"llm_calls": 0, "llm_input_tokens": 0, "llm_cached_input_tokens": 0, "llm_output_tokens": 0, "llm_reasoning_tokens": 0}
     root = mlflow.start_span(name="agent_session", span_type="AGENT")
     root_span = root.__enter__(); root_span.set_inputs({"model": args.model, "iterations": args.iterations, "n_samples": args.n, "baseline": base_acc})
     reasoning = {"effort": args.effort, **({"summary": args.reasoning_summary} if args.reasoning_summary != "none" else {})}
+    if args.backend == "chat":
+        llm = ChatBackend(client, args.model, SYSTEM, TOOLS, args.max_output_tokens or 16384, args.temperature, args.top_p, args.top_k, args.ctx_limit, args.effort)
+    else:
+        llm = ResponsesBackend(client, args.model, SYSTEM, TOOLS, reasoning, args.max_output_tokens or 32000)
+    llm.add_user(prompt)
     langfuse = get_client()
     # One trace per agent run (a self-contained unit of work); the session id links it to the MLflow run of the same name.
     with propagate_attributes(trace_name="weight-space-agent-run", session_id=f"agent_{run_id}",
@@ -730,24 +886,20 @@ def main():
             if finished:
                 break
             if turn == args.max_turns - 5:
-                inp.append({"role": "user", "content": "Only 5 turns left: benchmark your best probed edit if not done yet, then finish."})
-            r = client.responses.create(model=args.model, instructions=SYSTEM, input=inp, tools=TOOLS,
-                                        reasoning=reasoning, previous_response_id=prev, max_output_tokens=32000,
-                                        name="agent-turn", metadata={"turn": str(turn), "previous_response_id": str(prev)})
-            prev, inp = r.id, []
-            u = r.usage
+                llm.add_user("Only 5 turns left: benchmark your best probed edit if not done yet, then finish.")
+            tn = llm.step(turn)
             usage["llm_calls"] += 1
-            usage["llm_input_tokens"] += u.input_tokens
-            usage["llm_cached_input_tokens"] += u.input_tokens_details.cached_tokens
-            usage["llm_output_tokens"] += u.output_tokens
-            usage["llm_reasoning_tokens"] += u.output_tokens_details.reasoning_tokens
-            calls = [o for o in r.output if o.type == "function_call"]
-            for o in r.output:
-                if o.type == "message":
-                    text = "".join(c.text for c in o.content if c.type == "output_text")
-                    L(kind="assistant", text=text); print(f"[agent] {text[:400]}", flush=True)
+            usage["llm_input_tokens"] += tn.usage["input"]
+            usage["llm_cached_input_tokens"] += tn.usage["cached"]
+            usage["llm_output_tokens"] += tn.usage["output"]
+            usage["llm_reasoning_tokens"] += tn.usage["reasoning"]
+            calls = tn.calls
+            if tn.thinking:
+                L(kind="thinking", text=tn.thinking[:8000])
+            for text in tn.texts:
+                L(kind="assistant", text=text); print(f"[agent] {text[:400]}", flush=True)
             if not calls:
-                inp = [{"role": "user", "content": "Continue: call a tool (python / probe / run_benchmark / revert / finish)."}]
+                llm.add_user("Continue: call a tool (python / probe / run_benchmark / revert / finish).")
                 continue
             for c in calls:
                 try:
@@ -805,14 +957,17 @@ def main():
                                 s["edited_tensors"], s["edited_parameters"] = len(delta), n_par
                                 s["iterations_left"] = args.iterations - used
                                 gained, lost = s["vs_baseline"]["gained"], s["vs_baseline"]["lost"]
+                                sp = split_counts(p, p0)  # for the logs only: the agent is not told the dev/test breakdown
                                 history.append({"tune_iter": used, "note": args_j.get("note", ""), "accuracy": m["relaxed_accuracy"],
                                                 "edited_tensors": len(delta), "edited_parameters": n_par,
-                                                "gained": gained, "lost": lost, "sign_test_p": s["vs_baseline"]["sign_test_p"]})
+                                                "gained": gained, "lost": lost, "sign_test_p": s["vs_baseline"]["sign_test_p"], "split": sp})
                                 table.append({"scenario": f"iteration_{used}", "iteration": used, "accuracy": m["relaxed_accuracy"],
                                               "delta_vs_baseline": round(m["relaxed_accuracy"] - base_acc, 4),
                                               "edited_tensors": len(delta), "edited_parameters": n_par, "n_samples": m.get("n_samples"), "batch_size": m.get("batch_size"),
                                               "inference_seconds": m.get("inference_seconds"), "peak_gpu_mem_gb": m.get("peak_gpu_mem_gb"),
                                               "gained_vs_baseline": gained, "lost_vs_baseline": lost, "sign_test_p": s["vs_baseline"]["sign_test_p"],
+                                              "dev_gained": sp["dev"]["gained"], "dev_lost": sp["dev"]["lost"],
+                                              "test_gained": sp["test"]["gained"], "test_lost": sp["test"]["lost"], "test_sign_test_p": sp["test"]["sign_test_p"],
                                               "note": args_j.get("note", ""), "agent_model": args.model, "timestamp": m.get("timestamp")})
                                 if m["relaxed_accuracy"] > best["acc"]:
                                     best = {"acc": m["relaxed_accuracy"], "iter": used, "preds": p}
@@ -822,7 +977,8 @@ def main():
                                 lf_tool.update(metadata={"iteration": str(used), "edited_tensors": str(len(delta)), "edited_parameters": str(n_par)})
                                 lf_tool.score(name="relaxed_accuracy", value=m["relaxed_accuracy"], comment=args_j.get("note", "")[:500])
                                 print(f"[iter {used}] accuracy {m['relaxed_accuracy']:.4f} (base {base_acc:.4f}, best {best['acc']:.4f}) "
-                                      f"gained {gained} lost {lost} p={s['vs_baseline']['sign_test_p']}", flush=True)
+                                      f"gained {gained} lost {lost} p={s['vs_baseline']['sign_test_p']} | dev +{sp['dev']['gained']}/-{sp['dev']['lost']}"
+                                      f" | UNSEEN test half +{sp['test']['gained']}/-{sp['test']['lost']} p={sp['test']['sign_test_p']}", flush=True)
                                 res = json.dumps(s, indent=1)
                     else:
                         res = f"unknown tool {c.name}"
@@ -830,7 +986,7 @@ def main():
                     tool_span.set_outputs(res[:4000])
                     lf_tool.update(output=res[:4000])
                     tool_cm.__exit__(None, None, None)
-                    inp.append({"type": "function_call_output", "call_id": c.call_id, "output": res})
+                    llm.add_tool_result(c, res)
         if fingerprint() != guard:
             raise RuntimeError("Integrity check failed: benchmark/dataset/base weights changed. Aborting.")
         df = save_table()
@@ -848,7 +1004,7 @@ def main():
     best_sig = {}
     if best["preds"] is not None:
         g, l = compare(best["preds"], p0)
-        best_sig = {"gained": len(g), "lost": len(l), "sign_test_p": sign_test(len(g), len(l))}
+        best_sig = {"gained": len(g), "lost": len(l), "sign_test_p": sign_test(len(g), len(l)), **split_counts(best["preds"], p0)}
     probes_used = args.max_probes - ws.probes_left
     del ws, engine
     final = {

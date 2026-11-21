@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-11-21T07:33:51",
+  "model": "Qwen/Qwen3.5-0.8B",
+  "edited_tensors": 0,
+  "n_samples": 2500,
+  "batch_size": 32,
+  "relaxed_accuracy": 0.7112,
+  "accuracy_by_split": {
+    "0": 0.5176,
+    "1": 0.9048
+  },
+  "model_load_seconds": 1.23,
+  "inference_seconds": 385.23,
+  "seconds_per_sample": 0.154,
+  "estimated_full_test_minutes": 6.4,
+  "peak_gpu_mem_gb": 5.78
+}
